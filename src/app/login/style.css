@@ -1,0 +1,7 @@
+.header {
+    overflow: hidden;
+    padding: 20px 10px;
+    font-weight: bold;
+    color: var(--mui-palette-primary-main);
+    font-size: 25px;
+}

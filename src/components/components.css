@@ -1,0 +1,6 @@
+[type='uibutton'],
+[type='reset'],
+[type='submit'] {
+  background-color: #1976d2; /* 2 */
+  background-image: none; /* 2 */
+}
