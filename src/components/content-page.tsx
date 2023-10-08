@@ -12,7 +12,7 @@ function getContentHeight(window: Window, theme: Theme) {
   return window.innerHeight - Number.parseInt(theme.spacing(8));
 }
 
-export default function UIContentPage(contentMeta: ContentMeta) {
+export default function UIBaseContentPage(contentMeta: ContentMeta) {
   const theme = useTheme();
   const [contentSize, setContentSize] = React.useState([
     getContentWidth(window, theme),
@@ -38,7 +38,7 @@ export default function UIContentPage(contentMeta: ContentMeta) {
         minWidth: contentSize[0],
         height: contentSize[1],
       }}>
-      {contentMeta?.ContentRender?.()}
+      {contentMeta?.children}
     </Box>
   );
 }

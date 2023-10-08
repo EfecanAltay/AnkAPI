@@ -10,7 +10,8 @@ import { ISnackbar } from "@/common/snackbar.interface";
 import AnkAPISideBar from "./app-bar/ankapi-sidebar";
 import { MenuItemMeta } from "@/common/menu-item-meta";
 import CreateIcon from "@mui/icons-material/Create";
-import UIContentPage from "./content-page";
+import UIBaseContentPage from "./content-page";
+import UICreateAPIPage from "./contents/content-page";
 
 const drawerWidth = 240;
 
@@ -43,7 +44,9 @@ export default function Dashboard() {
 
       <AnkAPISideBar OnClickSidebarButton={OnClickSideButton} IsOpen={open} MenuListMeta={menuList} />
 
-      <UIContentPage></UIContentPage>
+      <UIBaseContentPage>
+          <UICreateAPIPage/>
+      </UIBaseContentPage>
       <UISnackbars ref={popupRef}></UISnackbars>
     </Box>
   );
