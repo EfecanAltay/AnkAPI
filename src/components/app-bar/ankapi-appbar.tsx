@@ -37,6 +37,11 @@ export default function AnkAPIAppBar(appBarMeta?:AppBarMeta) {
 
   function menuButonAction(){
     appBarMeta?.OnClickMenuButton?.();
+    window.dispatchEvent(
+      new CustomEvent("sidebar-open-action", {
+        detail: true,
+      })
+    );
   }
   if (appBarMeta?.IsHaveMenu && !appBarMeta.IsOpen) {
     menuIcon = <IconButton

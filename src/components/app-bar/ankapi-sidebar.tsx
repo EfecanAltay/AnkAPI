@@ -96,6 +96,11 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
 
   function sidebarSlideButton() {
     sidebarMeta?.OnClickSidebarButton?.();
+    window.dispatchEvent(
+      new CustomEvent("sidebar-open-action", {
+        detail: false,
+      })
+    );
   }
 
   function onClickMenuItem(menuItemMeta: MenuItemMeta) {
@@ -126,16 +131,8 @@ function renderMenuList(
   selecteMenuKey: string,
   callbackItem: any
 ) {
-  // if(!sidebarData.SelectedMenuKey && sidebarData?.MenuListMeta?.[0].MenuKey)
-  // {
-  //   setSelecteMenuKey(sidebarData.MenuListMeta[0].MenuKey);
-  // }
-  // else if(sidebarData.SelectedMenuKey){
-  //   setSelecteMenuKey(sidebarData.SelectedMenuKey);
-  // }
-
   function renderIcon(menuItem: MenuItemMeta, isMenuOpen: boolean) {
-    if (menuItem?.IconRender) {
+    if (menuItem?.IconContent) {
       return (
         <ListItemIcon
           sx={{
@@ -144,7 +141,7 @@ function renderMenuList(
             justifyContent: "center",
           }}
         >
-          {menuItem?.IconRender?.()}
+          {menuItem?.IconContent}
         </ListItemIcon>
       );
     } else if (!isMenuOpen) {
@@ -170,11 +167,14 @@ function renderMenuList(
           disablePadding
           sx={{
             display: "block",
-            backgroundColor: selecteMenuKey === menuItem.MenuKey
-              ? "var(--mui-palette-selected-menu-item)"
-              : "transparent",
+            backgroundColor:
+              selecteMenuKey === menuItem.MenuKey
+                ? "var(--mui-palette-selected-menu-item)"
+                : "transparent",
           }}
-          onClick={()=> {callbackItem(menuItem)}}
+          onClick={() => {
+            callbackItem(menuItem);
+          }}
         >
           <ListItemButton
             sx={{

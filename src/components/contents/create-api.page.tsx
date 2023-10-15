@@ -1,19 +1,173 @@
 "use client";
 
 import * as React from "react";
-import { Box, useTheme } from "@mui/material";
+import { Box, Button, Grid, Tab, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Tabs, TextField, Typography, styled, tableCellClasses, useTheme } from "@mui/material";
+import SendIcon from '@mui/icons-material/Send';
+import Paper from '@mui/material/Paper';
+
+//#region TabPanel
+
+interface TabPanelProps {
+  children?: React.ReactNode;
+  index: number;
+  value: number;
+}
+
+function CustomTabPanel(props: TabPanelProps) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && (
+        <Box sx={{ p: 3 }}>
+          {children}
+        </Box>
+      )}
+    </div>
+  );
+}
+
+function a11yProps(index: number) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+//#endregion
+
+//#region Table
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}));
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}));
+
+function createData(
+  name: string,
+  calories: number,
+  fat: number,
+  carbs: number,
+  protein: number,
+) {
+  return { name, calories, fat, carbs, protein };
+}
+
+const rows = [
+  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+  createData('Eclair', 262, 16.0, 24, 6.0),
+  createData('Cupcake', 305, 3.7, 67, 4.3),
+  createData('Gingerbread', 356, 16.0, 49, 3.9),
+];
+
+//#endregion
 
 export default function UICreateAPIPage() {
   const theme = useTheme();
+  const [value, setValue] = React.useState(0);
+
+  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
+    setValue(newValue);
+  };
 
   return (
     <Box
-      component="main"
+      component={Paper}
       sx={{
-        backgroundColor: "green",
-        flexGrow: "initial"
+        backgroundColor: "white",
+        flexGrow: "initial",
+        p: 2,
       }}>
-      Create API Page
+      <Grid container spacing={2}>
+        <Grid item sm={9} md={10} xs={10} >
+          <TextField
+            fullWidth
+            id="outlined-required"
+            label="API Request URL"
+            placeholder="https://<api_url>"
+            focused/>
+        </Grid>
+        <Grid item sm={2} md={1} xs={1} >
+          <Button fullWidth variant="contained" size="large" endIcon={<SendIcon />} style={{ height:"100%" }} >Send</Button>
+        </Grid>
+      </Grid>
+      <Grid container spacing={2} style={{padding:10}}>
+        <Grid item sm={9} md={10} xs={10} >
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+            <Tab label="Header" {...a11yProps(0)} />
+            <Tab label="Content" {...a11yProps(1)} />
+            <Tab label="Item Three" {...a11yProps(2)} />
+          </Tabs>
+        </Box>
+        <CustomTabPanel  value={value} index={0}>
+          <TableContainer component={Paper}>
+            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+              <TableHead>
+                <TableRow>
+                  <StyledTableCell>Dessert (100g serving)</StyledTableCell>
+                  <StyledTableCell align="right">Calories</StyledTableCell>
+                  <StyledTableCell align="right">Fat&nbsp;(g)</StyledTableCell>
+                  <StyledTableCell align="right">Carbs&nbsp;(g)</StyledTableCell>
+                  <StyledTableCell align="right">Protein&nbsp;(g)</StyledTableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {rows.map((row) => (
+                  <StyledTableRow key={row.name}>
+                    <StyledTableCell component="th" scope="row">
+                      <TextField
+                        fullWidth
+                        id="outlined-required"
+                        label="API Request URL"
+                        placeholder="https://<api_url>"
+                        value={row.name}
+                        focused/>
+                    </StyledTableCell>
+                    <StyledTableCell align="right">
+                      {row.calories}
+                    </StyledTableCell>
+                    <StyledTableCell align="right">{row.fat}</StyledTableCell>
+                    <StyledTableCell align="right">{row.carbs}</StyledTableCell>
+                    <StyledTableCell align="right">{row.protein}</StyledTableCell>
+                  </StyledTableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        </CustomTabPanel >
+        <CustomTabPanel  value={value} index={1}>
+          Content
+        </CustomTabPanel >
+        <CustomTabPanel  value={value} index={2}>
+          Item Three
+        </CustomTabPanel >
+        </Grid>
+      </Grid>
+      <Grid container spacing={2}>
+            Response Section
+      </Grid>
     </Box>
   );
 }

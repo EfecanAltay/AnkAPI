@@ -18,31 +18,27 @@ function getContentHeight(window: Window, theme: Theme) {
 
 export default function UIBaseContentPage(contentMeta: ContentMeta) {
   const theme = useTheme();
-  const [contentSize, setContentSize] = React.useState([0,0]);
-
-  function getInitialProps() {
-    console.log("GetInitialProps");
-  }
-
-  function componentWillMount() {
-    console.log("ComponentWillMount");
-  }
-
-  // if (typeof window !== 'undefined') {
-  //   setContentSize([getContentWidth(window, theme), getContentHeight(window, theme)]);
-  // }
+  const [contentSize, setContentSize] = React.useState([0, 0]);
+  const [sideBarShowing, setSideBarShowing] = React.useState(false);
 
   React.useEffect(() => {
-    setContentSize([
-      getContentWidth(window, theme),
-      getContentHeight(window, theme),
-    ]);
+    function sidebarOpenAction(customEvent: any) {
+      setSideBarShowing(customEvent.detail); 
+      setContentSize([
+        getContentWidth(window, theme) -
+          (customEvent.detail ? 180 : 0),
+        getContentHeight(window, theme),
+      ]);
+      console.log(customEvent.detail);
+    }
+    window.addEventListener("sidebar-open-action", sidebarOpenAction);
   }, []);
 
   React.useLayoutEffect(() => {
     function updateSize() {
       setContentSize([
-        getContentWidth(window, theme),
+        getContentWidth(window, theme) -
+          (sideBarShowing ? 180 : 0),
         getContentHeight(window, theme),
       ]);
     }
