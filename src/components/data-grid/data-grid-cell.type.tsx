@@ -3,19 +3,26 @@ export enum DataGridCellType{
   Number
 }
 
+//--- Modes ----------------------------
+
 export enum DataGridCellMode{
-  Normal,
+  Read,
+  Edit
+}
+
+export enum DataGridTableMode{
+  Read,
   Edit
 }
 
 //--- Rules ----------------------------
 
 export enum DataGridCellRule{
-  Normal,
+  Readonly,
   Editable
 }
 
 export enum DataGridTableRule{
-  Normal,
+  Readonly,
   Editable
 }
