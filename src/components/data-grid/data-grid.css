@@ -1,0 +1,6 @@
+.data-grid-cell{
+}
+
+.data-grid-cell.editable{
+    cursor: text;
+}

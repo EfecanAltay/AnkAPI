@@ -23,29 +23,27 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
 
   React.useEffect(() => {
     function sidebarOpenAction(customEvent: any) {
-      setSideBarShowing(customEvent.detail); 
+      setSideBarShowing(customEvent.detail);
       setContentSize([
-        getContentWidth(window, theme) -
-          (customEvent.detail ? 180 : 0),
+        getContentWidth(window, theme) - (customEvent.detail ? 180 : 0),
         getContentHeight(window, theme),
       ]);
       console.log(customEvent.detail);
     }
     window.addEventListener("sidebar-open-action", sidebarOpenAction);
-  }, []);
+  }, [theme]);
 
   React.useLayoutEffect(() => {
     function updateSize() {
       setContentSize([
-        getContentWidth(window, theme) -
-          (sideBarShowing ? 180 : 0),
+        getContentWidth(window, theme) - (sideBarShowing ? 180 : 0),
         getContentHeight(window, theme),
       ]);
     }
     window.addEventListener("resize", updateSize);
     updateSize();
     return () => window.removeEventListener("resize", updateSize);
-  }, []);
+  }, [theme, sideBarShowing]);
 
   return (
     <Box
