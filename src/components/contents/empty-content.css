@@ -1,0 +1,9 @@
+.emptyLabel
+{
+  font-size: 70px;
+  font-weight: 600;
+  background-image: radial-gradient(circle, #d2d7fa, #000000);
+  color: transparent;
+  background-clip: text;
+  -webkit-background-clip: text;
+}

@@ -9,17 +9,16 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
-  SvgIcon,
   Theme,
   Typography,
   styled,
   useTheme,
 } from "@mui/material";
 import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
-import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 import MuiDrawer from "@mui/material/Drawer";
 import { SidebarMeta } from "@/common/sidebar-meta";
 import { MenuItemMeta } from "@/common/menu-item-meta";
+import "./ankapi-sidebar.css";
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -93,68 +92,98 @@ const closedMixin = (theme: Theme): CSSObject => ({
 
 export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
   const theme = useTheme();
+  const [selecteMenuKey, setSelecteMenuKey] = React.useState("");
 
   function sidebarSlideButton() {
     sidebarMeta?.OnClickSidebarButton?.();
+    window.dispatchEvent(
+      new CustomEvent("sidebar-open-action", {
+        detail: false,
+      })
+    );
+  }
+
+  function onClickMenuItem(menuItemMeta: MenuItemMeta) {
+    setSelecteMenuKey(menuItemMeta.MenuKey);
+    sidebarMeta.OnChangedSelectedMenu?.(menuItemMeta.MenuKey);
   }
 
   return (
     <Drawer variant="permanent" open={sidebarMeta.IsOpen}>
       <DrawerHeader>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              AnkAPI
+          AnkAPI
         </Typography>
         {sidebarMeta.IsOpen && (
-            <IconButton onClick={sidebarSlideButton}>
-                <ChevronLeftIcon />
-            </IconButton>
+          <IconButton onClick={sidebarSlideButton}>
+            <ChevronLeftIcon />
+          </IconButton>
         )}
       </DrawerHeader>
       <Divider />
-      { renderMenuList(sidebarMeta) }
+      {renderMenuList(sidebarMeta, selecteMenuKey, onClickMenuItem)}
     </Drawer>
   );
 }
 
-function renderMenuList(sidebarData: SidebarMeta) {
-
-
-  function renderIcon(menuItem : MenuItemMeta, isMenuOpen: boolean){
-    if(menuItem?.IconRender)
-    {
+function renderMenuList(
+  sidebarData: SidebarMeta,
+  selecteMenuKey: string,
+  callbackItem: any
+) {
+  function renderIcon(menuItem: MenuItemMeta, isMenuOpen: boolean) {
+    if (menuItem?.IconContent) {
       return (
-      <ListItemIcon
-        sx={{
-          minWidth: 0,
-          mr: sidebarData.IsOpen ? 3 : "auto",
-          justifyContent: "center",
-        }}>
-          {menuItem?.IconRender?.()}
+        <ListItemIcon
+          sx={{
+            minWidth: 0,
+            mr: sidebarData.IsOpen ? 3 : "auto",
+            justifyContent: "center",
+          }}
+        >
+          {menuItem?.IconContent}
         </ListItemIcon>
       );
-    }
-    else if(!isMenuOpen)
-    {
+    } else if (!isMenuOpen) {
       return (
-        <div>{menuItem.Name.replace('  ',' ').split(' ').map(x=> x.charAt(0)).join("").toUpperCase().slice(0,5)}</div>
-      ); 
+        <div>
+          {menuItem.Name.replace("  ", " ")
+            .split(" ")
+            .map((x) => x.charAt(0))
+            .join("")
+            .toUpperCase()
+            .slice(0, 5)}
+        </div>
+      );
     }
   }
 
   return (
     <List>
-      {
-      sidebarData?.MenuListMeta?.map((menuItem : MenuItemMeta) => (
-        <ListItem key={menuItem.MenuKey} disablePadding sx={{ display: "block" }}>
+      {sidebarData?.MenuListMeta?.map((menuItem: MenuItemMeta) => (
+        <ListItem
+          className="menuItem"
+          key={menuItem.MenuKey}
+          disablePadding
+          sx={{
+            display: "block",
+            backgroundColor:
+              selecteMenuKey === menuItem.MenuKey
+                ? "var(--mui-palette-selected-menu-item)"
+                : "transparent",
+          }}
+          onClick={() => {
+            callbackItem(menuItem);
+          }}
+        >
           <ListItemButton
             sx={{
               minHeight: 48,
               justifyContent: sidebarData.IsOpen ? "initial" : "center",
               px: 2.5,
-            }}>
-            {
-              renderIcon(menuItem, sidebarData.IsOpen)
-            }            
+            }}
+          >
+            {renderIcon(menuItem, sidebarData.IsOpen)}
             <ListItemText
               primary={menuItem.Name}
               sx={{ opacity: sidebarData.IsOpen ? 1 : 0 }}

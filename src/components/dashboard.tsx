@@ -10,27 +10,46 @@ import { ISnackbar } from "@/common/snackbar.interface";
 import AnkAPISideBar from "./app-bar/ankapi-sidebar";
 import { MenuItemMeta } from "@/common/menu-item-meta";
 import CreateIcon from "@mui/icons-material/Create";
-import UIContentPage from "./content-page";
+import UIBaseContentPage from "./content-page";
+import UICreateAPIPage from "./contents/create-api.page";
+import UIEmptyContentPage from "./contents/empty-content.page";
 
 const drawerWidth = 240;
 
 export default function Dashboard() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [selectedMenuKey, setSelectedMenuKey] = React.useState("CAR");
   const popupRef = useRef<ISnackbar>(null);
 
-  function OnClickMenuButton() : any {
+  function OnClickMenuButton(): any {
     setOpen(true);
   }
 
   function OnClickSideButton() {
-    setOpen(false)
+    setOpen(false);
   }
 
-  const menuList : MenuItemMeta[] = [];
-  menuList.push({ Name :"Create API Request", MenuKey:"CAR" , IconRender: ()=>{ return(<CreateIcon/>) } } as MenuItemMeta);
-  menuList.push({ Name :"API Request List", MenuKey:"ARL" } as MenuItemMeta);
-  menuList.push({ Name :"Request Flow", MenuKey:"RF" } as MenuItemMeta);
+  function OnSelectedMenu(selectedMenuKey: string) {
+    setSelectedMenuKey(selectedMenuKey);
+  }
+
+  const menuList: MenuItemMeta[] = [];
+  menuList.push({
+    Name: "Create API Request",
+    MenuKey: "CAR",
+    IconContent: <CreateIcon />,
+    PageContent: <UICreateAPIPage />,
+  } as MenuItemMeta);
+  menuList.push({ Name: "API Request List", MenuKey: "ARL" } as MenuItemMeta);
+  menuList.push({ Name: "Request Flow", MenuKey: "RF" } as MenuItemMeta);
+
+  function getPage(menuKey: string): any {
+    const contentPage = menuList.find(
+      (x) => x.MenuKey === menuKey
+    )?.PageContent;
+    return contentPage ? contentPage : <UIEmptyContentPage />;
+  }
 
   return (
     <Box sx={{ display: "flex" }}>
@@ -39,11 +58,16 @@ export default function Dashboard() {
         Title={""}
         IsHaveMenu={true}
         OnClickMenuButton={OnClickMenuButton}
-        IsOpen={open} />
+        IsOpen={open}
+      />
 
-      <AnkAPISideBar OnClickSidebarButton={OnClickSideButton} IsOpen={open} MenuListMeta={menuList} />
-
-      <UIContentPage></UIContentPage>
+      <AnkAPISideBar
+        OnClickSidebarButton={OnClickSideButton}
+        IsOpen={open}
+        MenuListMeta={menuList}
+        OnChangedSelectedMenu={OnSelectedMenu}
+      />
+      <UIBaseContentPage IsSideBarShowing={open}>{getPage(selectedMenuKey)}</UIBaseContentPage>
       <UISnackbars ref={popupRef}></UISnackbars>
     </Box>
   );
