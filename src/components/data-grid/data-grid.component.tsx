@@ -23,6 +23,7 @@ import {
 import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ButtonBase from "@mui/material/ButtonBase";
+import { Block, BorderAll, Padding } from "@mui/icons-material";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -48,6 +49,22 @@ class DataGridColHeader {
   public Id: number = 0;
   public Name: string = "";
   public Width: number = 100;
+  public Type: DataGridCellType = DataGridCellType.Text;
+
+  /**
+   * DataGridCol
+   */
+  constructor(
+    id: number = 0,
+    name: string = "",
+    width: number = 100,
+    type: DataGridCellType = DataGridCellType.Text
+  ) {
+    this.Id = id;
+    this.Name = name;
+    this.Width = width;
+    this.Type = type;
+  }
 }
 
 class DataGridCol {
@@ -61,8 +78,8 @@ class DataGridCol {
    * DataGridCol
    */
   constructor(
-    id: number,
-    value?: number | string,
+    id: number = 0,
+    value: number | string = "",
     type: DataGridCellType = DataGridCellType.Text,
     rule: DataGridCellRule = DataGridCellRule.Readonly
   ) {
@@ -82,7 +99,7 @@ class DataGridRow {
    * DataGridRow
    */
   constructor(
-    id: number,
+    id: number = 0,
     dataGridCols: DataGridCol[] = [],
     mode: DataGridCellMode = DataGridCellMode.Read
   ) {
@@ -93,10 +110,10 @@ class DataGridRow {
   }
 }
 const colHeader: DataGridColHeader[] = [
-  { Id: 0, Name: "Header", Width: 100 },
-  { Id: 1, Name: "Header1", Width: 100 },
-  { Id: 2, Name: "Header2", Width: 100 },
-  { Id: 3, Name: "Header3", Width: 100 },
+  new DataGridColHeader(0, "Header 0", 100, DataGridCellType.Text),
+  new DataGridColHeader(1, "Header 1", 100),
+  new DataGridColHeader(2, "Header 2", 100),
+  new DataGridColHeader(3, "Header 3", 100),
 ];
 
 const rows: DataGridRow[] = [
@@ -125,13 +142,17 @@ const rows: DataGridRow[] = [
 export default function DataGrid(iDataGrid: IDataGrid) {
   const [, forceRender] = React.useState(false);
 
+  function Refresh() {
+    forceRender((prev) => !prev);
+  }
+
   function _cellOnClick(col: DataGridCol, inputColRef: any) {
     if (
       iDataGrid.EditRule === DataGridTableRule.Editable &&
       col.Rule === DataGridCellRule.Editable
     ) {
       col.CurrentMode = DataGridCellMode.Edit;
-      forceRender((prev) => !prev);
+      Refresh();
       inputColRef?.focus();
     }
   }
@@ -142,7 +163,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
       col.Rule === DataGridCellRule.Editable
     ) {
       col.CurrentMode = DataGridCellMode.Read;
-      forceRender((prev) => !prev);
+      Refresh();
     }
   }
 
@@ -166,6 +187,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
               renderCell = (
                 <TextField
                   multiline
+                  className="editCellText"
                   variant="standard"
                   defaultValue={col.Value}
                   inputRef={(input) => input && input.focus()}
@@ -212,6 +234,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
     return (
       <StyledTableCell
         key={cellId}
+        style={{ padding: "0px" }}
         onClick={() => {
           if (col) _cellOnClick(col, inputRef);
         }}
@@ -221,7 +244,9 @@ export default function DataGrid(iDataGrid: IDataGrid) {
             : "data-grid-cell"
         }
       >
-        {renderCell}
+      <span className="cellStyle">
+          {renderCell}
+        </span>
       </StyledTableCell>
     );
   }
@@ -247,7 +272,10 @@ export default function DataGrid(iDataGrid: IDataGrid) {
           }
           align="center"
         >
-          <ButtonBase style={{ width: "100%", height: "100%" }}>
+          <ButtonBase
+            style={{ width: "100%", height: "100%" }}
+            onClick={PlusRowAction}
+          >
             <AddIcon></AddIcon>
           </ButtonBase>
         </TableCell>
@@ -258,11 +286,45 @@ export default function DataGrid(iDataGrid: IDataGrid) {
   function RenderPlusCol() {
     return (
       <TableCell className="addSectionColButton" key={-1} align="left">
-        <ButtonBase style={{ width: "100%", height: "100%" }}>
+        <ButtonBase
+          style={{ width: "100%", height: "100%" }}
+          onClick={PlusColAction}
+        >
           <AddIcon></AddIcon>
         </ButtonBase>
       </TableCell>
     );
+  }
+
+  function addRow() {
+    const cols = [];
+    for (let index = 0; index < colHeader.length; index++) {
+      cols.push(
+        new DataGridCol(
+          index,
+          "",
+          colHeader[index].Type,
+          iDataGrid.EditRule === DataGridTableRule.Editable
+            ? DataGridCellRule.Editable
+            : DataGridCellRule.Readonly
+        )
+      );
+    }
+    rows.push(new DataGridRow(rows.length - 1, cols));
+    Refresh();
+  }
+
+  function addCol() {
+    colHeader.push(new DataGridColHeader());
+    Refresh();
+  }
+
+  function PlusRowAction() {
+    addRow();
+  }
+
+  function PlusColAction() {
+    addCol();
   }
 
   return (
@@ -286,8 +348,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
                   {col.Name}
                 </StyledTableCell>
               ))}
-              {
-              iDataGrid.EditRule === DataGridTableRule.Editable &&
+              {iDataGrid.EditRule === DataGridTableRule.Editable &&
               iDataGrid.CurrentMode === DataGridTableMode.Edit &&
               iDataGrid.InsertColRule === DataGridTableRule.Editable
                 ? RenderPlusCol()
@@ -296,8 +357,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
           </TableHead>
           <TableBody>
             {rows.map((row) => RenderRow(row))}
-            {
-            iDataGrid.EditRule === DataGridTableRule.Editable &&
+            {iDataGrid.EditRule === DataGridTableRule.Editable &&
             iDataGrid.CurrentMode === DataGridTableMode.Edit &&
             iDataGrid.InsertRowRule === DataGridTableRule.Editable
               ? RenderPlusRow()
