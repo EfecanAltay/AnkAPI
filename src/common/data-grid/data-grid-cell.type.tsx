@@ -10,6 +10,12 @@ export enum DataGridCellMode{
   Edit
 }
 
+export enum DataGridValidationMode{
+  Normal,
+  Success,
+  Error
+}
+
 export enum DataGridTableMode{
   Read,
   Edit

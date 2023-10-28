@@ -19,11 +19,17 @@ import {
   DataGridCellType,
   DataGridTableMode,
   DataGridTableRule,
-} from "./data-grid-cell.type";
+  DataGridValidationMode,
+} from "../../common/data-grid/data-grid-cell.type";
 import React from "react";
 import AddIcon from "@mui/icons-material/Add";
 import ButtonBase from "@mui/material/ButtonBase";
-import { Block, BorderAll, Padding } from "@mui/icons-material";
+import {
+  DataGridCell,
+  DataGridColHeader,
+  DataGridRow,
+} from "@/common/data-grid/data-grid.classes";
+import GppMaybeIcon from "@mui/icons-material/GppMaybe";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -34,6 +40,7 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     fontSize: 14,
   },
 }));
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 
 const StyledTableRow = styled(TableRow)(({ theme }) => ({
   "&:nth-of-type(odd)": {
@@ -45,138 +52,198 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-class DataGridColHeader {
-  public Id: number = 0;
-  public Name: string = "";
-  public Width: number = 100;
-  public Type: DataGridCellType = DataGridCellType.Text;
+const AttentionIcon = styled(GppMaybeIcon)(({ theme }) => ({
+  position: "absolute",
+  color: theme.palette.error.light,
+}));
 
-  /**
-   * DataGridCol
-   */
-  constructor(
-    id: number = 0,
-    name: string = "",
-    width: number = 100,
-    type: DataGridCellType = DataGridCellType.Text
-  ) {
-    this.Id = id;
-    this.Name = name;
-    this.Width = width;
-    this.Type = type;
-  }
-}
+const RemoveIcon = styled(RemoveCircleIcon)(({ theme }) => ({
+  cursor: "pointer",
+  color: theme.palette.warning.light,
+}));
 
-class DataGridCol {
-  public Id: number = 0;
-  public Value?: number | string;
-  public Type: DataGridCellType = DataGridCellType.Text;
-  public Rule: DataGridCellRule = DataGridCellRule.Readonly;
-  public CurrentMode: DataGridCellMode = DataGridCellMode.Read;
+const RemoveHeaderIcon = styled(RemoveCircleIcon)(({ theme }) => ({
+  cursor: "pointer",
+  color: theme.palette.warning.light,
+  height: "15px",
+  position: "relative",
+  top: "-10px",
+  right: "-15px",
+}));
 
-  /**
-   * DataGridCol
-   */
-  constructor(
-    id: number = 0,
-    value: number | string = "",
-    type: DataGridCellType = DataGridCellType.Text,
-    rule: DataGridCellRule = DataGridCellRule.Readonly
-  ) {
-    this.Id = id;
-    this.Value = value;
-    this.Rule = rule;
-    this.Type = type;
-  }
-}
-
-class DataGridRow {
-  public Id: number = 0;
-  public DataGridCol: DataGridCol[] = [];
-  public Mode: DataGridCellMode = DataGridCellMode.Read;
-
-  /**
-   * DataGridRow
-   */
-  constructor(
-    id: number = 0,
-    dataGridCols: DataGridCol[] = [],
-    mode: DataGridCellMode = DataGridCellMode.Read
-  ) {
-    this.Id = id;
-    this.DataGridCol = [];
-    this.Mode = mode;
-    this.DataGridCol = dataGridCols;
-  }
-}
-const colHeader: DataGridColHeader[] = [
-  new DataGridColHeader(0, "Header 0", 100, DataGridCellType.Text),
-  new DataGridColHeader(1, "Header 1", 100),
-  new DataGridColHeader(2, "Header 2", 100),
-  new DataGridColHeader(3, "Header 3", 100),
+//#region Mock Data
+let colHeader: DataGridColHeader[] = [
+  new DataGridColHeader("Header 0", 100, DataGridCellType.Text),
+  new DataGridColHeader("Header 1", 100),
+  new DataGridColHeader("Header 2", 100),
+  new DataGridColHeader("Header 3", 100),
 ];
 
-const rows: DataGridRow[] = [
-  new DataGridRow(0, [
-    new DataGridCol(
-      0,
-      "TEST",
-      DataGridCellType.Text,
-      DataGridCellRule.Editable
-    ),
-    new DataGridCol(1, "", DataGridCellType.Text, DataGridCellRule.Editable),
-    new DataGridCol(2),
+let rows: DataGridRow[] = [
+  new DataGridRow([
+    new DataGridCell("TEST", DataGridCellType.Text, DataGridCellRule.Editable),
+    new DataGridCell("", DataGridCellType.Text, DataGridCellRule.Editable),
+    new DataGridCell(),
   ]),
-  new DataGridRow(1, [
-    new DataGridCol(0),
-    new DataGridCol(1, "TEST2"),
-    new DataGridCol(2),
+  new DataGridRow([
+    new DataGridCell(),
+    new DataGridCell("TEST2"),
+    new DataGridCell(),
   ]),
-  new DataGridRow(2, [
-    new DataGridCol(0),
-    new DataGridCol(1),
-    new DataGridCol(2, "TEST3"),
+  new DataGridRow([
+    new DataGridCell(),
+    new DataGridCell(),
+    new DataGridCell("TEST3"),
+    new DataGridCell("TEST4"),
   ]),
 ];
+//#endregion
 
 export default function DataGrid(iDataGrid: IDataGrid) {
   const [, forceRender] = React.useState(false);
+  const [tableValid, SetTableValid] = React.useState(true);
 
   function Refresh() {
     forceRender((prev) => !prev);
   }
 
-  function _cellOnClick(col: DataGridCol, inputColRef: any) {
+  function _cellOnClick(col: DataGridCell, inputColRef: any) {
     if (
       iDataGrid.EditRule === DataGridTableRule.Editable &&
       col.Rule === DataGridCellRule.Editable
     ) {
       col.CurrentMode = DataGridCellMode.Edit;
-      Refresh();
       inputColRef?.focus();
+      inputColRef?.select();
+      Refresh();
     }
+    console.log("click :" + col.Id);
   }
 
-  function _cellOnBlur(col: DataGridCol) {
+  function _cellOnBlur(col: DataGridCell, inputColRef: any) {
     if (
       iDataGrid.EditRule === DataGridTableRule.Editable &&
       col.Rule === DataGridCellRule.Editable
     ) {
+      if (!col.Nullable && (!col.Value || col.Value === ""))
+        col.Validation = DataGridValidationMode.Error;
+      else {
+        col.Validation = DataGridValidationMode.Normal;
+        col.CurrentMode = DataGridCellMode.Read;
+      }
+
+    } else {
       col.CurrentMode = DataGridCellMode.Read;
+    }
+    inputColRef?.blur();
+    Refresh();
+    console.log("on blur :" + col.Id);
+  }
+
+  function _textCellOnChanged(col: DataGridCell, event: any) {
+    col.Value = event.currentTarget.value.toString();
+    if (!col.Nullable) nullValidation(col);
+  }
+
+  function nullValidation(col: DataGridCell) {
+    if (col.Validation === DataGridValidationMode.Error && col.Value) {
+      col.Validation = DataGridValidationMode.Normal;
+      SetTableValid(true);
+      Refresh();
+    } else if (
+      col.Validation === DataGridValidationMode.Normal &&
+      (!col.Value || col.Value === "")
+    ) {
+      col.Validation = DataGridValidationMode.Error;
+      SetTableValid(false);
       Refresh();
     }
   }
 
-  function _textCellOnChanged(col: DataGridCol, event: any) {
-    col.Value = event.currentTarget.value.toString();
-  }
-
-  function RenderCell(col: DataGridCol) {
+  function RenderColHeader(col: DataGridColHeader, index: number) {
     let renderCell: any;
-    let cellId: number = 0;
+    col.Id = "h" + index;
     let inputRef: any;
     if (col) {
-      cellId = col.Id;
+      switch (col.CurrentMode) {
+        case DataGridCellMode.Read:
+          renderCell = (
+            <Typography
+              component="div"
+              sx={{ position: "relative", flexGrow: 1 }}
+            >
+              {col.Value}
+            </Typography>
+          );
+          break;
+        case DataGridCellMode.Edit:
+          renderCell = (
+            <span>
+              <TextField
+                error={col.Validation === DataGridValidationMode.Error}
+                multiline
+                className="editCellText"
+                variant="standard"
+                defaultValue={col.Value}
+                inputRef={(input) => inputRef = input}
+                onBlur={(event) => {
+                  _cellOnBlur(col, inputRef);
+                }}
+                onChange={(event) => {
+                  _textCellOnChanged(col, event);
+                }}
+              ></TextField>
+              { col.Validation === DataGridValidationMode.Error ? (
+                <AttentionIcon></AttentionIcon>
+              ) : (
+                ""
+              )}
+            </span>
+          );
+          break;
+      }
+    } else {
+      renderCell = (
+        <Typography component="div" sx={{ flexGrow: 1 }}></Typography>
+      );
+    }
+
+    return (
+      <StyledTableCell sx={{ width: col.Width }} key={col.Id} align="left">
+        <div
+          style={{
+            position: "relative",
+            height: "0px",
+            float: "right",
+            zIndex: "99",
+          }}
+        >
+          {
+            iDataGrid.EditRule === DataGridTableRule.Editable &&
+            iDataGrid.InsertColRule === DataGridTableRule.Editable ? 
+            <RemoveHeaderIcon onClick={() => removeCol(col)}></RemoveHeaderIcon>
+            : ""
+          }
+       
+        </div>
+        {renderCell}
+      </StyledTableCell>
+    );
+  }
+
+  function RenderCell(col: DataGridCell, cellIndex: number) {
+    let renderCell: any;
+    let inputRef: any;
+    if (col) {
+      col.Id = "c" + cellIndex;
+      // when table is edit mode, changed cell rule as editable
+      if (
+        iDataGrid.CurrentMode === DataGridTableMode.Edit &&
+        (iDataGrid.InsertColRule === DataGridTableRule.Editable ||
+          iDataGrid.InsertRowRule === DataGridTableRule.Editable)
+      )
+        col.Rule = DataGridCellRule.Editable;
+
       switch (col.Type) {
         case DataGridCellType.Text:
           switch (col.CurrentMode) {
@@ -186,13 +253,21 @@ export default function DataGrid(iDataGrid: IDataGrid) {
             case DataGridCellMode.Edit:
               renderCell = (
                 <TextField
+                  error={col.Validation === DataGridValidationMode.Error}
                   multiline
                   className="editCellText"
                   variant="standard"
                   defaultValue={col.Value}
-                  inputRef={(input) => input && input.focus()}
+                  inputRef={(input) => 
+                  {
+                    if(input)
+                    {
+                      inputRef = input;
+                      input?.focus();
+                    }
+                  }}
                   onBlur={() => {
-                    _cellOnBlur(col);
+                    _cellOnBlur(col,inputRef);
                   }}
                   onChange={(event) => {
                     _textCellOnChanged(col, event);
@@ -225,15 +300,13 @@ export default function DataGrid(iDataGrid: IDataGrid) {
       }
     } else {
       renderCell = (
-        <Typography component="div" sx={{ flexGrow: 1 }}>
-          NULL
-        </Typography>
+        <Typography component="div" sx={{ flexGrow: 1 }}></Typography>
       );
     }
 
     return (
       <StyledTableCell
-        key={cellId}
+        key={col.Id}
         style={{ padding: "0px" }}
         onClick={() => {
           if (col) _cellOnClick(col, inputRef);
@@ -244,26 +317,53 @@ export default function DataGrid(iDataGrid: IDataGrid) {
             : "data-grid-cell"
         }
       >
-      <span className="cellStyle">
-          {renderCell}
-        </span>
+        <span className="cellStyle">{renderCell}</span>
       </StyledTableCell>
     );
   }
 
-  function RenderRow(row: DataGridRow) {
+  function RenderRow(row: DataGridRow, rowIndex: number) {
+    if (colHeader.length > row.DataGridCol.length) {
+      for (
+        let index = row.DataGridCol.length;
+        index < colHeader.length;
+        index++
+      ) {
+        const col = colHeader[index];
+        row.DataGridCol.push(
+          new DataGridCell("", col.Type, DataGridCellRule.Editable)
+        );
+      }
+    }
+
+    row.Id = "r" + rowIndex;
     return (
       <TableRow key={row.Id}>
-        {colHeader.map((_col, _index) => RenderCell(row.DataGridCol[_index]))}
+        {
+          row.DataGridCol.map((_col, _index) =>
+          RenderCell(_col, _index + 1 + (rowIndex - 1) * colHeader.length))
+        }
+        {
+            iDataGrid.InsertRowRule === DataGridTableRule.Editable?
+            <StyledTableCell
+            key="-1"
+            style={{ padding: "12px" }}>
+            <RemoveIcon onClick={() => {
+              removeRow(row);
+            }}>
+            </RemoveIcon>
+          </StyledTableCell> : ""
+        }        
       </TableRow>
     );
   }
 
   function RenderPlusRow() {
     return (
-      <TableRow>
+      <TableRow key="rowPlus">
         <TableCell
           className="addSectionRowButton"
+          key="rowPlusChild"
           colSpan={
             iDataGrid.InsertRowRule === DataGridTableRule.Editable &&
             iDataGrid.CurrentMode === DataGridTableMode.Edit
@@ -274,7 +374,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
         >
           <ButtonBase
             style={{ width: "100%", height: "100%" }}
-            onClick={PlusRowAction}
+            onClick={() => PlusRowAction()}
           >
             <AddIcon></AddIcon>
           </ButtonBase>
@@ -288,7 +388,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
       <TableCell className="addSectionColButton" key={-1} align="left">
         <ButtonBase
           style={{ width: "100%", height: "100%" }}
-          onClick={PlusColAction}
+          onClick={() => PlusColAction()}
         >
           <AddIcon></AddIcon>
         </ButtonBase>
@@ -300,30 +400,57 @@ export default function DataGrid(iDataGrid: IDataGrid) {
     const cols = [];
     for (let index = 0; index < colHeader.length; index++) {
       cols.push(
-        new DataGridCol(
-          index,
+        new DataGridCell(
           "",
           colHeader[index].Type,
-          iDataGrid.EditRule === DataGridTableRule.Editable
-            ? DataGridCellRule.Editable
-            : DataGridCellRule.Readonly
+          DataGridCellRule.Editable,
+          true
         )
       );
     }
-    rows.push(new DataGridRow(rows.length - 1, cols));
+    rows.push(new DataGridRow(cols));
     Refresh();
   }
 
   function addCol() {
-    colHeader.push(new DataGridColHeader());
+    const n_header = new DataGridColHeader("", 100, DataGridCellType.Text);
+    n_header.Id = "h" + colHeader.length;
+    n_header.Rule = DataGridCellRule.Editable;
+    n_header.CurrentMode = DataGridCellMode.Edit;
+    n_header.Nullable = false;
+    colHeader.push(n_header);
+    Refresh();
+  }
+
+  function removeCol(col: DataGridColHeader) {
+    const removingColIndex = colHeader.indexOf(col);
+    colHeader = colHeader.filter((_col) => _col !== col);
+    rows.forEach((row) => {
+      row.DataGridCol = row.DataGridCol.filter(
+        (col) => col !== row.DataGridCol[removingColIndex]
+      );
+    });
+    Refresh();
+  }
+
+  function removeRow(row: DataGridRow) {
+    rows = rows.filter((_row) => _row !== row);
     Refresh();
   }
 
   function PlusRowAction() {
+    if (tableValid === false) {
+      alert("When invalid table, cannot Add Row !");
+      return;
+    }
     addRow();
   }
 
   function PlusColAction() {
+    if (tableValid === false) {
+      alert("When invalid table, cannot Add Col !");
+      return;
+    }
     addCol();
   }
 
@@ -339,15 +466,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
         <Table aria-label="customized table">
           <TableHead>
             <TableRow>
-              {colHeader.map((col) => (
-                <StyledTableCell
-                  sx={{ width: col.Width }}
-                  key={col.Id}
-                  align="left"
-                >
-                  {col.Name}
-                </StyledTableCell>
-              ))}
+              {colHeader.map((col, _index) => RenderColHeader(col, _index ))}
               {iDataGrid.EditRule === DataGridTableRule.Editable &&
               iDataGrid.CurrentMode === DataGridTableMode.Edit &&
               iDataGrid.InsertColRule === DataGridTableRule.Editable
@@ -356,7 +475,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => RenderRow(row))}
+            {rows.map((row, _index) => RenderRow(row, _index + 1))}
             {iDataGrid.EditRule === DataGridTableRule.Editable &&
             iDataGrid.CurrentMode === DataGridTableMode.Edit &&
             iDataGrid.InsertRowRule === DataGridTableRule.Editable

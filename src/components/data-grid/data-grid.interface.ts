@@ -1,4 +1,4 @@
-import { DataGridTableMode, DataGridTableRule } from "./data-grid-cell.type";
+import { DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
 
 export class IDataGrid {
     public Caption?: string;

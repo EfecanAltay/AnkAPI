@@ -22,7 +22,7 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import Paper from "@mui/material/Paper";
 import DataGrid from "../data-grid/data-grid.component";
-import { DataGridTableMode, DataGridTableRule } from "../data-grid/data-grid-cell.type";
+import { DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
 
 //#region TabPanel
 
@@ -154,7 +154,7 @@ export default function UICreateAPIPage() {
             <DataGrid
               EditRule={DataGridTableRule.Editable}
               InsertColRule={DataGridTableRule.Editable}
-              InsertRowRule={DataGridTableRule.Editable}
+              InsertRowRule={DataGridTableRule.Readonly}
               CurrentMode={DataGridTableMode.Edit}
             />
           </CustomTabPanel>
