@@ -71,37 +71,11 @@ const RemoveHeaderIcon = styled(RemoveCircleIcon)(({ theme }) => ({
   right: "-15px",
 }));
 
-//#region Mock Data
-let colHeader: DataGridColHeader[] = [
-  new DataGridColHeader("Header 0", 100, DataGridCellType.Text),
-  new DataGridColHeader("Header 1", 100),
-  new DataGridColHeader("Header 2", 100),
-  new DataGridColHeader("Header 3", 100),
-];
-
-let rows: DataGridRow[] = [
-  new DataGridRow([
-    new DataGridCell("TEST", DataGridCellType.Text, DataGridCellRule.Editable),
-    new DataGridCell("", DataGridCellType.Text, DataGridCellRule.Editable),
-    new DataGridCell(),
-  ]),
-  new DataGridRow([
-    new DataGridCell(),
-    new DataGridCell("TEST2"),
-    new DataGridCell(),
-  ]),
-  new DataGridRow([
-    new DataGridCell(),
-    new DataGridCell(),
-    new DataGridCell("TEST3"),
-    new DataGridCell("TEST4"),
-  ]),
-];
-//#endregion
-
 export default function DataGrid(iDataGrid: IDataGrid) {
   const [, forceRender] = React.useState(false);
   const [tableValid, SetTableValid] = React.useState(true);
+  const [colHeaders, SetColHeaders] = React.useState(iDataGrid.ColHeaders);
+  const [rows, SetRows] = React.useState(iDataGrid.Rows);
 
   function Refresh() {
     forceRender((prev) => !prev);
@@ -307,7 +281,6 @@ export default function DataGrid(iDataGrid: IDataGrid) {
     return (
       <StyledTableCell
         key={col.Id}
-        style={{ padding: "0px" }}
         onClick={() => {
           if (col) _cellOnClick(col, inputRef);
         }}
@@ -316,6 +289,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
             ? "data-grid-cell editable"
             : "data-grid-cell"
         }
+        style={{ padding: "0px" , maxWidth : colHeaders[cellIndex-1]?.Width }}
       >
         <span className="cellStyle">{renderCell}</span>
       </StyledTableCell>
@@ -323,13 +297,13 @@ export default function DataGrid(iDataGrid: IDataGrid) {
   }
 
   function RenderRow(row: DataGridRow, rowIndex: number) {
-    if (colHeader.length > row.DataGridCol.length) {
+    if (colHeaders.length > row.DataGridCol.length) {
       for (
         let index = row.DataGridCol.length;
-        index < colHeader.length;
+        index < colHeaders.length;
         index++
       ) {
-        const col = colHeader[index];
+        const col = colHeaders[index];
         row.DataGridCol.push(
           new DataGridCell("", col.Type, DataGridCellRule.Editable)
         );
@@ -341,11 +315,13 @@ export default function DataGrid(iDataGrid: IDataGrid) {
       <TableRow key={row.Id}>
         {
           row.DataGridCol.map((_col, _index) =>
-          RenderCell(_col, _index + 1 + (rowIndex - 1) * colHeader.length))
+          RenderCell(_col, _index + 1 + (rowIndex - 1) * colHeaders.length))
         }
         {
-            iDataGrid.InsertRowRule === DataGridTableRule.Editable?
-            <StyledTableCell
+          iDataGrid.EditRule === DataGridTableRule.Editable &&
+          iDataGrid.CurrentMode === DataGridTableMode.Edit &&
+          iDataGrid.InsertRowRule === DataGridTableRule.Editable?
+          <StyledTableCell
             key="-1"
             style={{ padding: "12px" }}>
             <RemoveIcon onClick={() => {
@@ -367,8 +343,8 @@ export default function DataGrid(iDataGrid: IDataGrid) {
           colSpan={
             iDataGrid.InsertRowRule === DataGridTableRule.Editable &&
             iDataGrid.CurrentMode === DataGridTableMode.Edit
-              ? colHeader.length + 1
-              : colHeader.length
+              ? colHeaders.length + 1
+              : colHeaders.length
           }
           align="center"
         >
@@ -398,11 +374,11 @@ export default function DataGrid(iDataGrid: IDataGrid) {
 
   function addRow() {
     const cols = [];
-    for (let index = 0; index < colHeader.length; index++) {
+    for (let index = 0; index < colHeaders.length; index++) {
       cols.push(
         new DataGridCell(
           "",
-          colHeader[index].Type,
+          colHeaders[index].Type,
           DataGridCellRule.Editable,
           true
         )
@@ -414,17 +390,17 @@ export default function DataGrid(iDataGrid: IDataGrid) {
 
   function addCol() {
     const n_header = new DataGridColHeader("", 100, DataGridCellType.Text);
-    n_header.Id = "h" + colHeader.length;
+    n_header.Id = "h" + colHeaders.length;
     n_header.Rule = DataGridCellRule.Editable;
     n_header.CurrentMode = DataGridCellMode.Edit;
     n_header.Nullable = false;
-    colHeader.push(n_header);
+    colHeaders.push(n_header);
     Refresh();
   }
 
   function removeCol(col: DataGridColHeader) {
-    const removingColIndex = colHeader.indexOf(col);
-    colHeader = colHeader.filter((_col) => _col !== col);
+    const removingColIndex = colHeaders.indexOf(col);
+    SetColHeaders(colHeaders.filter((_col) => _col !== col));
     rows.forEach((row) => {
       row.DataGridCol = row.DataGridCol.filter(
         (col) => col !== row.DataGridCol[removingColIndex]
@@ -434,7 +410,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
   }
 
   function removeRow(row: DataGridRow) {
-    rows = rows.filter((_row) => _row !== row);
+    SetRows(rows.filter((_row) => _row !== row));
     Refresh();
   }
 
@@ -466,7 +442,7 @@ export default function DataGrid(iDataGrid: IDataGrid) {
         <Table aria-label="customized table">
           <TableHead>
             <TableRow>
-              {colHeader.map((col, _index) => RenderColHeader(col, _index ))}
+              {colHeaders.map((col, _index) => RenderColHeader(col, _index ))}
               {iDataGrid.EditRule === DataGridTableRule.Editable &&
               iDataGrid.CurrentMode === DataGridTableMode.Edit &&
               iDataGrid.InsertColRule === DataGridTableRule.Editable

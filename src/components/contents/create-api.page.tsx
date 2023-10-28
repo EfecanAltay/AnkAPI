@@ -22,7 +22,8 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import Paper from "@mui/material/Paper";
 import DataGrid from "../data-grid/data-grid.component";
-import { DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
+import { DataGridCellRule, DataGridCellType, DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
+import { DataGridCell, DataGridColHeader, DataGridRow } from "@/common/data-grid/data-grid.classes";
 
 //#region TabPanel
 
@@ -98,6 +99,29 @@ const rows = [
 
 //#endregion
 
+//#region Create API
+let apiReqHeadersCols: DataGridColHeader[] = [
+  new DataGridColHeader("Header", 200, DataGridCellType.Text),
+  new DataGridColHeader("Value", 500),
+];
+
+let apiReqStaticHeaderRows: DataGridRow[] = [
+  new DataGridRow([
+    new DataGridCell("Content-Type", DataGridCellType.Text),
+    new DataGridCell("", DataGridCellType.Text),
+  ]),
+  new DataGridRow([
+    new DataGridCell(),
+    new DataGridCell(),
+  ]),
+  new DataGridRow([
+    new DataGridCell(),
+    new DataGridCell(),
+  ]),
+];
+//#endregion
+
+
 export default function UICreateAPIPage() {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -153,10 +177,11 @@ export default function UICreateAPIPage() {
           <CustomTabPanel value={value} index={0}>
             <DataGrid
               EditRule={DataGridTableRule.Editable}
-              InsertColRule={DataGridTableRule.Editable}
-              InsertRowRule={DataGridTableRule.Readonly}
-              CurrentMode={DataGridTableMode.Edit}
-            />
+              InsertColRule={DataGridTableRule.Readonly}
+              InsertRowRule={DataGridTableRule.Editable}
+              CurrentMode={DataGridTableMode.Read} 
+              ColHeaders={apiReqHeadersCols}
+              Rows={apiReqStaticHeaderRows}/>
           </CustomTabPanel>
           <CustomTabPanel value={value} index={1}>
             Content

@@ -62,3 +62,7 @@ export class DataGridColHeader extends DataGridCell {
     this.Width = width;
   }
 }
+
+export class IDataGrid{
+
+}
