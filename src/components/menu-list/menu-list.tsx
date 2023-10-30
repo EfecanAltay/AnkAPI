@@ -1,7 +1,9 @@
 import * as React from "react";
+import MuiAppBar, { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import IconButton from "@mui/material/IconButton";
 import {
   Box,
+  CSSObject,
   Divider,
   List,
   ListItem,
@@ -9,6 +11,7 @@ import {
   ListItemIcon,
   ListItemText,
   Paper,
+  Theme,
   ThemeProvider,
   Tooltip,
   Typography,
@@ -16,29 +19,34 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
+import ChevronLeftIcon from "@mui/icons-material/ChevronLeft";
+import MuiDrawer from "@mui/material/Drawer";
 import { SidebarMeta } from "@/common/sidebar-meta";
 import { MenuItemMeta } from "@/common/menu-item-meta";
-import "./ankapi-sidebar.css";
-import { ArrowRight, Home, Person, Settings } from "@mui/icons-material";
+import { MenuListMeta } from "@/common/menu-list";
+import { ArrowRight, Home, Settings } from "@mui/icons-material";
+
+interface AppBarProps extends MuiAppBarProps {
+  open?: boolean;
+}
+const drawerWidth = 240;
+
 
 const FireNav = styled(List)<{ component?: React.ElementType }>({
-  "&":{
-    width:"200px"
-  },
-  "& .MuiListItemButton-root": {
+  '& .MuiListItemButton-root': {
     paddingLeft: 24,
-    width:"100%"
+    paddingRight: 24,
   },
-  "& .MuiListItemIcon-root": {
+  '& .MuiListItemIcon-root': {
     minWidth: 0,
     marginRight: 16,
   },
-  "& .MuiSvgIcon-root": {
+  '& .MuiSvgIcon-root': {
     fontSize: 20,
   },
 });
 
-export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
+export default function AnkAPIMenuList(sidebarMeta: MenuListMeta) {
   const theme = useTheme();
   const [selecteMenuKey, setSelecteMenuKey] = React.useState("");
 
@@ -48,7 +56,7 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
   }
 
   return (
-    <Box sx={{ display: 'flex'}}>
+    <Box sx={{ display: 'flex' }}>
       <ThemeProvider
         theme={createTheme({
           components: {
@@ -65,13 +73,13 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
           },
         })}
       >
-      <Paper elevation={0} className="sidebar">
+        <Paper elevation={0} sx={{ maxWidth: 256, height:400 }}>
           <FireNav component="nav" disablePadding>
-            <ListItemButton component="a" href="#customized-list" sx={{ height: 60 }}>
+            <ListItemButton component="a" href="#customized-list">
               <ListItemIcon sx={{ fontSize: 20 }}>🔥</ListItemIcon>
               <ListItemText
                 sx={{ my: 0 }}
-                primary="AnkAPI"
+                primary="Firebash"
                 primaryTypographyProps={{
                   fontSize: 20,
                   fontWeight: 'medium',
@@ -79,56 +87,6 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
                 }}
               />
             </ListItemButton>
-            <Divider />
-            <ListItem component="div" disablePadding>
-              <ListItem sx={{ height: 60 }}>
-                <ListItemIcon>
-                  <Person color="primary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Efecan Altay"
-                  primaryTypographyProps={{
-                    color: 'primary',
-                    fontWeight: 'medium',
-                    variant: 'body2',
-                  }}
-                />
-              </ListItem>
-              <Tooltip title="Profile Settings">
-                <IconButton
-                  size="large"
-                  sx={{
-                    '& svg': {
-                      color: 'rgba(255,255,255,0.8)',
-                      transition: '0.2s',
-                      transform: 'translateX(0) rotate(0)',
-                    },
-                    '&:hover, &:focus': {
-                      bgcolor: 'unset',
-                      '& svg:first-of-type': {
-                        transform: 'translateX(-4px) rotate(-20deg)',
-                      },
-                      '& svg:last-of-type': {
-                        right: 0,
-                        opacity: 1,
-                      },
-                    },
-                    '&:after': {
-                      content: '""',
-                      position: 'absolute',
-                      height: '80%',
-                      display: 'block',
-                      left: 0,
-                      width: '1px',
-                      bgcolor: 'divider',
-                    },
-                  }}
-                >
-                  <Settings />
-                  <ArrowRight sx={{ position: 'absolute', right: 4, opacity: 0 }} />
-                </IconButton>
-              </Tooltip>
-            </ListItem>
             <Divider />
             {renderMenuList(sidebarMeta.MenuListMeta, selecteMenuKey, onClickMenuItem)}
           </FireNav>
@@ -139,7 +97,7 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
 }
 
 function renderMenuList(
-  menuListMeta: MenuItemMeta[] | undefined,
+  menuListMeta : MenuItemMeta[] | undefined,
   selecteMenuKey: string,
   callbackItem: any
 ) {
@@ -189,7 +147,6 @@ function renderMenuList(
               sx={{ opacity: 1}}
             />
           </ListItemButton>
-          <Divider />
         </ListItem>
       ))}
     </List>

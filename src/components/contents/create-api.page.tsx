@@ -6,15 +6,10 @@ import {
   Button,
   Grid,
   Tab,
-  Table,
-  TableBody,
   TableCell,
-  TableContainer,
-  TableHead,
   TableRow,
   Tabs,
   TextField,
-  Typography,
   styled,
   tableCellClasses,
   useTheme,
@@ -24,6 +19,7 @@ import Paper from "@mui/material/Paper";
 import DataGrid from "../data-grid/data-grid.component";
 import { DataGridCellRule, DataGridCellType, DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
 import { DataGridCell, DataGridColHeader, DataGridRow } from "@/common/data-grid/data-grid.classes";
+import AnkAPIMenuList from "../menu-list/menu-list";
 
 //#region TabPanel
 
@@ -121,7 +117,6 @@ let apiReqStaticHeaderRows: DataGridRow[] = [
 ];
 //#endregion
 
-
 export default function UICreateAPIPage() {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
@@ -190,9 +185,6 @@ export default function UICreateAPIPage() {
             Item Three
           </CustomTabPanel>
         </Grid>
-      </Grid>
-      <Grid container spacing={2}>
-        Response Section
       </Grid>
     </Box>
   );

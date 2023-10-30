@@ -9,12 +9,9 @@ import { useRef } from "react";
 import { ISnackbar } from "@/common/snackbar.interface";
 import AnkAPISideBar from "./app-bar/ankapi-sidebar";
 import { MenuItemMeta } from "@/common/menu-item-meta";
-import CreateIcon from "@mui/icons-material/Create";
 import UIBaseContentPage from "./content-page";
 import UICreateAPIPage from "./contents/create-api.page";
 import UIEmptyContentPage from "./contents/empty-content.page";
-
-const drawerWidth = 240;
 
 export default function Dashboard() {
   const theme = useTheme();
@@ -36,12 +33,10 @@ export default function Dashboard() {
 
   const menuList: MenuItemMeta[] = [];
   menuList.push({
-    Name: "Create API Request",
+    Name: "API Request",
     MenuKey: "CAR",
-    IconContent: <CreateIcon />,
     PageContent: <UICreateAPIPage />,
   } as MenuItemMeta);
-  menuList.push({ Name: "API Request List", MenuKey: "ARL" } as MenuItemMeta);
   menuList.push({ Name: "Request Flow", MenuKey: "RF" } as MenuItemMeta);
 
   function getPage(menuKey: string): any {
@@ -56,18 +51,15 @@ export default function Dashboard() {
       <CssBaseline />
       <AnkAPIAppBar
         Title={""}
-        IsHaveMenu={true}
+        IsHaveMenu={false}
         OnClickMenuButton={OnClickMenuButton}
         IsOpen={open}
       />
-
       <AnkAPISideBar
         OnClickSidebarButton={OnClickSideButton}
-        IsOpen={open}
         MenuListMeta={menuList}
-        OnChangedSelectedMenu={OnSelectedMenu}
-      />
-      <UIBaseContentPage IsSideBarShowing={open}>{getPage(selectedMenuKey)}</UIBaseContentPage>
+        OnChangedSelectedMenu={OnSelectedMenu} IsOpen={false} />
+      <UIBaseContentPage IsSideBarShowing={false}>{getPage(selectedMenuKey)}</UIBaseContentPage>
       <UISnackbars ref={popupRef}></UISnackbars>
     </Box>
   );

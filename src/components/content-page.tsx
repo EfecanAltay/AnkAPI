@@ -1,8 +1,9 @@
 "use client";
 
 import "./components.css";
+import "./content-page.css";
 import * as React from "react";
-import { Box, Theme, useTheme } from "@mui/material";
+import { Box, Container, Grid, Stack, Theme, useTheme } from "@mui/material";
 import { ContentMeta } from "@/common/content-meta";
 
 function getContentWidth(window: Window, theme: Theme) {
@@ -25,7 +26,7 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
     function sidebarOpenAction(customEvent: any) {
       setSideBarShowing(customEvent.detail);
       setContentSize([
-        getContentWidth(window, theme) - (customEvent.detail ? 180 : 0),
+        getContentWidth(window, theme) - 120,
         getContentHeight(window, theme),
       ]);
       console.log(customEvent.detail);
@@ -36,7 +37,7 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   React.useLayoutEffect(() => {
     function updateSize() {
       setContentSize([
-        getContentWidth(window, theme) - (sideBarShowing ? 180 : 0),
+        getContentWidth(window, theme) - 120,
         getContentHeight(window, theme),
       ]);
     }
@@ -53,10 +54,11 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
         flexGrow: "initial",
         mt: 8,
         minWidth: contentSize[0],
+        width:10,
         height: contentSize[1],
-      }}
-    >
-      {contentMeta?.children}
+      }}>
+          {contentMeta?.children}
+     
     </Box>
   );
 }

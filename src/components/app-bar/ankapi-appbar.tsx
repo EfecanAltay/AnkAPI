@@ -6,7 +6,7 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AppBarMeta } from '@/common/page-meta';
-import { styled } from '@mui/material';
+import { ThemeProvider, createTheme, styled } from '@mui/material';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
@@ -17,7 +17,7 @@ const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer,
-  width: `calc(100% - ${theme.spacing(10)})`,
+  width: `calc(100% - 200px)`,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -55,7 +55,23 @@ export default function AnkAPIAppBar(appBarMeta?:AppBarMeta) {
   }
 
   return (
-    <AppBar position="fixed" open={appBarMeta?.IsOpen} >
+    <ThemeProvider
+        theme={createTheme({
+          components: {
+            MuiListItemButton: {
+              defaultProps: {
+                disableTouchRipple: true,
+              },
+            },
+          },
+          palette: {
+            mode: 'dark',
+            primary: { main: 'rgb(102, 157, 246)' },
+            background: { paper: 'rgb(5, 30, 52)' },
+          },
+        })}
+      >
+      <AppBar open={appBarMeta?.IsOpen} >
         <Toolbar>
           {menuIcon}
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
@@ -64,5 +80,6 @@ export default function AnkAPIAppBar(appBarMeta?:AppBarMeta) {
           <Button color="inherit">Login</Button>
         </Toolbar>
     </AppBar>
+    </ThemeProvider>
   );
 }

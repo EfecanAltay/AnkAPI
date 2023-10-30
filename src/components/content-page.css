@@ -1,0 +1,15 @@
+.container {
+  display: table;
+}
+
+.leftMenu {
+  background-color: #ff9e2c;
+  left: 180px;
+  width: 180px;
+}
+
+.content {
+  background-color: #b6701e;
+  right: 0px;
+  left: 180px;
+}
