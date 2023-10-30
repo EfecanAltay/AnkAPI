@@ -5,6 +5,9 @@ import {
   Box,
   Button,
   Grid,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   Tab,
   TableCell,
   TableRow,
@@ -120,9 +123,14 @@ let apiReqStaticHeaderRows: DataGridRow[] = [
 export default function UICreateAPIPage() {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
+  const [apiType, setAPIType] = React.useState("0");
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
+  };
+
+  const apiTypeChange = (event: SelectChangeEvent) => {
+    setAPIType(event.target.value);
   };
 
   return (
@@ -135,6 +143,21 @@ export default function UICreateAPIPage() {
       }}
     >
       <Grid container spacing={2}>
+        <Grid item sm={1} md={1} xs={1}>
+          <Select
+            value={apiType}
+            sx={{ m: 1, width: 1/1 }}
+            variant="outlined"
+            style={{ backgroundColor:"gray", color:"white"}}
+            onChange={apiTypeChange}
+            inputProps={{ 'aria-label': 'Without label' }}
+          >
+            <MenuItem value={"0"}>GET</MenuItem>
+            <MenuItem value={"1"}>POST</MenuItem>
+            <MenuItem value={"2"}>PUT</MenuItem>
+            <MenuItem value={"3"}>DELETE</MenuItem>
+          </Select>
+        </Grid>
         <Grid item sm={9} md={10} xs={10}>
           <TextField
             fullWidth
@@ -142,6 +165,7 @@ export default function UICreateAPIPage() {
             label="API Request URL"
             placeholder="https://<api_url>"
             focused
+            style={{ marginTop: "10px" }}
           />
         </Grid>
         <Grid item sm={2} md={1} xs={1}>
@@ -150,7 +174,7 @@ export default function UICreateAPIPage() {
             variant="contained"
             size="large"
             endIcon={<SendIcon />}
-            style={{ height: "100%" }}
+            style={{ marginTop:"10px", height: "75%" }}
           >
             Send
           </Button>
