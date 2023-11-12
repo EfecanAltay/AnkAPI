@@ -59,8 +59,8 @@ export default function AnkAPIMenuList(menuList: MenuListMeta) {
           },
           palette: {
             mode: "dark",
-            primary: { main: "rgb(102, 157, 246)" },
-            background: { paper: "rgb(5, 30, 52)" },
+            primary: { main:  "#082e50" },
+            background: { paper: "#082e50" },
           },
         })}
       >

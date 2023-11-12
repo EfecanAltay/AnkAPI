@@ -3,15 +3,15 @@
 import "./components.css";
 import "./content-page.css";
 import * as React from "react";
-import { Box, Theme, useTheme } from "@mui/material";
+import { Box, CssBaseline, Theme, useTheme } from "@mui/material";
 import { ContentMeta } from "@/common/content-meta";
 import AnkAPIMenuList from "./menu-list/menu-list";
 import { MenuItemData } from "@/common/menu-item";
 
 function getContentWidth(window: Window, theme: Theme) {
   if (typeof window !== "undefined")
-    return window.innerWidth - Number.parseInt(theme.spacing(10)) - 1;
-  else return 100;
+    return window.innerWidth - Number.parseInt(theme.spacing(10))-20;
+  else return 120;
 }
 function getContentHeight(window: Window, theme: Theme) {
   if (typeof window !== "undefined")
@@ -88,16 +88,14 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   const [sideBarShowing, setSideBarShowing] = React.useState(false);
   
   const menuList = prepareMenuData(mockMenuListData as MenuItemData[])
-
-  console.log(menuList);
   React.useEffect(() => {
     function sidebarOpenAction(customEvent: any) {
+      
       setSideBarShowing(customEvent.detail);
       setContentSize([
-        getContentWidth(window, theme) - 120,
+        getContentWidth(window, theme),
         getContentHeight(window, theme),
       ]);
-      console.log(customEvent.detail);
     }
     window.addEventListener("sidebar-open-action", sidebarOpenAction);
   }, [theme]);
@@ -105,9 +103,10 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   React.useLayoutEffect(() => {
     function updateSize() {
       setContentSize([
-        getContentWidth(window, theme) - 120,
+        getContentWidth(window, theme),
         getContentHeight(window, theme),
       ]);
+      console.log(contentSize);
     }
     window.addEventListener("resize", updateSize);
     updateSize();
@@ -116,16 +115,14 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
 
   return (
     <Box
-      component="main"
       sx={{
-        backgroundColor: "translate",
-        flexGrow: "initial",
+        backgroundColor: "bisque",
         mt: 8,
-        minWidth: contentSize[0],
-        width:20,
+        width: contentSize[0],
+        padding:0,
         height: contentSize[1],
-      }}>
-      <div className="container">
+      }} >
+      <div className="container" style={{ minWidth:contentSize[0]}}>
         <div className="leftMenu">
           <AnkAPIMenuList MenuItemList={menuList} ></AnkAPIMenuList>
         </div>

@@ -47,7 +47,7 @@ export default function Dashboard() {
   }
 
   return (
-    <Box sx={{ width:"100%", display: "flex" }}>
+    <Box sx={{  display: "flex", flexDirection:"row", alignItems:"stretch"}}>
       <CssBaseline />
       <AnkAPIAppBar
         Title={""}
@@ -59,8 +59,7 @@ export default function Dashboard() {
         OnClickSidebarButton={OnClickSideButton}
         MenuListMeta={menuList}
         OnChangedSelectedMenu={OnSelectedMenu} IsOpen={false} />
-      <UIBaseContentPage IsSideBarShowing={false}>{getPage(selectedMenuKey)}</UIBaseContentPage>
-      <UISnackbars ref={popupRef}></UISnackbars>
+      <UIBaseContentPage>{getPage(selectedMenuKey)}</UIBaseContentPage>
     </Box>
   );
 }
