@@ -1,4 +1,4 @@
-import { MenuItemMeta } from "./menu-item-meta";
+import { MenuItemMeta } from "./menu-item";
 
 export class SidebarMeta {
     public IsOpen: boolean = false;

@@ -8,10 +8,10 @@ import UISnackbars from "./snackbar";
 import { useRef } from "react";
 import { ISnackbar } from "@/common/snackbar.interface";
 import AnkAPISideBar from "./app-bar/ankapi-sidebar";
-import { MenuItemMeta } from "@/common/menu-item-meta";
 import UIBaseContentPage from "./content-page";
 import UICreateAPIPage from "./contents/create-api.page";
 import UIEmptyContentPage from "./contents/empty-content.page";
+import { MenuItemData } from "@/common/menu-item";
 
 export default function Dashboard() {
   const theme = useTheme();
@@ -31,13 +31,13 @@ export default function Dashboard() {
     setSelectedMenuKey(selectedMenuKey);
   }
 
-  const menuList: MenuItemMeta[] = [];
+  const menuList: MenuItemData[] = [];
   menuList.push({
     Name: "API Request",
     MenuKey: "CAR",
     PageContent: <UICreateAPIPage />,
-  } as MenuItemMeta);
-  menuList.push({ Name: "Request Flow", MenuKey: "RF" } as MenuItemMeta);
+  } as MenuItemData);
+  menuList.push({ Name: "Request Flow", MenuKey: "RF" } as MenuItemData);
 
   function getPage(menuKey: string): any {
     const contentPage = menuList.find(
@@ -47,7 +47,7 @@ export default function Dashboard() {
   }
 
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={{ width:"100%", display: "flex" }}>
       <CssBaseline />
       <AnkAPIAppBar
         Title={""}

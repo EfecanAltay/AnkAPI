@@ -1,15 +1,17 @@
 .container {
-  display: table;
+  height: 100%;
+  width: 100%;
+  background-color: #b6701e;
 }
 
 .leftMenu {
   background-color: #ff9e2c;
-  left: 180px;
-  width: 180px;
+  float: left;
+  width: 220px;
 }
 
 .content {
   background-color: #b6701e;
-  right: 0px;
-  left: 180px;
+  float: left;
+  width: calc(100% - 220px);
 }

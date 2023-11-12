@@ -6,18 +6,18 @@ import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import { AppBarMeta } from '@/common/page-meta';
-import { ThemeProvider, createTheme, styled } from '@mui/material';
+import { Avatar, ThemeProvider, createTheme, styled } from '@mui/material';
 
 interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
-const drawerWidth = 240;
+const drawerWidth = 100;
 
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer,
-  width: `calc(100% - 200px)`,
+  width: `calc(100% - ${drawerWidth}px)`,
   transition: theme.transitions.create(['width', 'margin'], {
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen,
@@ -78,6 +78,7 @@ export default function AnkAPIAppBar(appBarMeta?:AppBarMeta) {
               {appBarMeta?.Title}
           </Typography>
           <Button color="inherit">Login</Button>
+          <Avatar alt="Efecan Altay" src="/static/images/avatar/1.jpg" />
         </Toolbar>
     </AppBar>
     </ThemeProvider>

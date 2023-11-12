@@ -11,19 +11,18 @@ import {
   Paper,
   ThemeProvider,
   Tooltip,
-  Typography,
   createTheme,
   styled,
   useTheme,
 } from "@mui/material";
 import { SidebarMeta } from "@/common/sidebar-meta";
-import { MenuItemMeta } from "@/common/menu-item-meta";
+import { MenuItemData } from "@/common/menu-item";
 import "./ankapi-sidebar.css";
 import { ArrowRight, Home, Person, Settings } from "@mui/icons-material";
 
 const FireNav = styled(List)<{ component?: React.ElementType }>({
   "&":{
-    width:"200px"
+    width:"100px"
   },
   "& .MuiListItemButton-root": {
     paddingLeft: 24,
@@ -42,7 +41,7 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
   const theme = useTheme();
   const [selecteMenuKey, setSelecteMenuKey] = React.useState("");
 
-  function onClickMenuItem(menuItemMeta: MenuItemMeta) {
+  function onClickMenuItem(menuItemMeta: MenuItemData) {
     setSelecteMenuKey(menuItemMeta.MenuKey);
     sidebarMeta.OnChangedSelectedMenu?.(menuItemMeta.MenuKey);
   }
@@ -68,67 +67,15 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
       <Paper elevation={0} className="sidebar">
           <FireNav component="nav" disablePadding>
             <ListItemButton component="a" href="#customized-list" sx={{ height: 60 }}>
-              <ListItemIcon sx={{ fontSize: 20 }}>🔥</ListItemIcon>
               <ListItemText
-                sx={{ my: 0 }}
                 primary="AnkAPI"
                 primaryTypographyProps={{
-                  fontSize: 20,
+                  fontSize: 15,
                   fontWeight: 'medium',
                   letterSpacing: 0,
                 }}
               />
             </ListItemButton>
-            <Divider />
-            <ListItem component="div" disablePadding>
-              <ListItem sx={{ height: 60 }}>
-                <ListItemIcon>
-                  <Person color="primary" />
-                </ListItemIcon>
-                <ListItemText
-                  primary="Efecan Altay"
-                  primaryTypographyProps={{
-                    color: 'primary',
-                    fontWeight: 'medium',
-                    variant: 'body2',
-                  }}
-                />
-              </ListItem>
-              <Tooltip title="Profile Settings">
-                <IconButton
-                  size="large"
-                  sx={{
-                    '& svg': {
-                      color: 'rgba(255,255,255,0.8)',
-                      transition: '0.2s',
-                      transform: 'translateX(0) rotate(0)',
-                    },
-                    '&:hover, &:focus': {
-                      bgcolor: 'unset',
-                      '& svg:first-of-type': {
-                        transform: 'translateX(-4px) rotate(-20deg)',
-                      },
-                      '& svg:last-of-type': {
-                        right: 0,
-                        opacity: 1,
-                      },
-                    },
-                    '&:after': {
-                      content: '""',
-                      position: 'absolute',
-                      height: '80%',
-                      display: 'block',
-                      left: 0,
-                      width: '1px',
-                      bgcolor: 'divider',
-                    },
-                  }}
-                >
-                  <Settings />
-                  <ArrowRight sx={{ position: 'absolute', right: 4, opacity: 0 }} />
-                </IconButton>
-              </Tooltip>
-            </ListItem>
             <Divider />
             {renderMenuList(sidebarMeta.MenuListMeta, selecteMenuKey, onClickMenuItem)}
           </FireNav>
@@ -139,11 +86,11 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
 }
 
 function renderMenuList(
-  menuListMeta: MenuItemMeta[] | undefined,
+  menuListMeta: MenuItemData[] | undefined,
   selecteMenuKey: string,
   callbackItem: any
 ) {
-  function renderIcon(menuItem: MenuItemMeta) {
+  function renderIcon(menuItem: MenuItemData) {
     if (menuItem?.IconContent) {
       return (
         <ListItemIcon
@@ -160,9 +107,8 @@ function renderMenuList(
   }
   return (
     <List>
-      {menuListMeta?.map((menuItem: MenuItemMeta) => (
+      {menuListMeta?.map((menuItem: MenuItemData) => (
         <ListItem
-          className="menuItem"
           key={menuItem.MenuKey}
           disablePadding
           sx={{

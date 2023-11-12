@@ -1,9 +1,5 @@
-import { SvgIconComponent } from "@mui/icons-material";
+import { MenuItemData } from "./menu-item";
 
 export class MenuItemMeta {
-    public MenuKey: string = "";
-    public Name: string = "";
-    public IconContent: any;
-    public IsSelected: boolean = false;
-    public PageContent: any;
+    public MenuItemData: MenuItemData;
 }
