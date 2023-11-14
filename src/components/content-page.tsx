@@ -3,7 +3,7 @@
 import "./components.css";
 import "./content-page.css";
 import * as React from "react";
-import { Box, CssBaseline, Theme, useTheme } from "@mui/material";
+import { Backdrop, Box, CircularProgress, Theme, useTheme } from "@mui/material";
 import { ContentMeta } from "@/common/content-meta";
 import AnkAPIMenuList from "./menu-list/menu-list";
 import { MenuItemData } from "@/common/menu-item";
@@ -86,8 +86,10 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   const theme = useTheme();
   const [contentSize, setContentSize] = React.useState([0, 0]);
   const [sideBarShowing, setSideBarShowing] = React.useState(false);
+  const [showLoading, setShowLoading] = React.useState(false);
   
   const menuList = prepareMenuData(mockMenuListData as MenuItemData[])
+
   React.useEffect(() => {
     function sidebarOpenAction(customEvent: any) {
       
@@ -120,15 +122,21 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
         mt: 8,
         width: contentSize[0],
         padding:0,
-        height: contentSize[1],
+        height: "calc(100%) - 10px",
       }} >
       <div className="container" style={{ minWidth:contentSize[0]}}>
         <div className="leftMenu">
           <AnkAPIMenuList MenuItemList={menuList} ></AnkAPIMenuList>
         </div>
         <div className="content">
-          {contentMeta?.children}
+        {contentMeta?.children}     
         </div>  
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={showLoading}
+          onClick={()=>{}}>
+          <CircularProgress color="inherit" />
+        </Backdrop>
       </div>
     </Box>
   );

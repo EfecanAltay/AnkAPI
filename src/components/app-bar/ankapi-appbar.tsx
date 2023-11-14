@@ -16,6 +16,7 @@ const drawerWidth = 100;
 const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
+  position: "absolute",
   zIndex: theme.zIndex.drawer,
   width: `calc(100% - ${drawerWidth}px)`,
   transition: theme.transitions.create(['width', 'margin'], {

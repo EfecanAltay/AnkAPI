@@ -1,5 +1,4 @@
 import * as React from "react";
-import { AppBarProps as MuiAppBarProps } from "@mui/material/AppBar";
 import {
   ListItem,
   ListItemIcon,
@@ -14,7 +13,7 @@ import "./menu-item.css";
 export default function AnkAPIMenuItem(menuItemMeta: MenuItemMeta) {
   const theme = useTheme();
   const [selecteMenuKey, setSelecteMenuKey] = React.useState("");
-
+  console.log(menuItemMeta.MenuItemData?.MenuKey);
   return (
     <ListItem
       disablePadding

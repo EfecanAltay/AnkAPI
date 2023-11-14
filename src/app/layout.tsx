@@ -17,11 +17,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html lang="en" style={{ height: "100%", width: "100%" }}>
       <head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </head>
-      <body className={inter.className}>{children}</body>
+      <body style={{ height: "100%", width: "100%" }}>{children}</body>
     </html>
   );
 }

@@ -1,5 +1,4 @@
 import * as React from "react";
-import IconButton from "@mui/material/IconButton";
 import {
   Box,
   Divider,
@@ -10,7 +9,6 @@ import {
   ListItemText,
   Paper,
   ThemeProvider,
-  Tooltip,
   createTheme,
   styled,
   useTheme,
@@ -18,11 +16,11 @@ import {
 import { SidebarMeta } from "@/common/sidebar-meta";
 import { MenuItemData } from "@/common/menu-item";
 import "./ankapi-sidebar.css";
-import { ArrowRight, Home, Person, Settings } from "@mui/icons-material";
 
 const FireNav = styled(List)<{ component?: React.ElementType }>({
   "&":{
-    width:"100px"
+    width:"100px",
+    minHeight : "100%"
   },
   "& .MuiListItemButton-root": {
     paddingLeft: 24,
@@ -64,7 +62,7 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
           },
         })}
       >
-      <Paper elevation={0} className="sidebar">
+      <Paper elevation={0} className="sidebar" style={{borderRadius:0}}>
           <FireNav component="nav" disablePadding>
             <ListItemButton component="a" href="#customized-list" sx={{ height: 60 }}>
               <ListItemText

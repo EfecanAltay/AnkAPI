@@ -4,14 +4,23 @@ import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import AnkAPIAppBar from "./app-bar/ankapi-appbar";
-import UISnackbars from "./snackbar";
-import { useRef } from "react";
+import { Suspense, useRef } from "react";
 import { ISnackbar } from "@/common/snackbar.interface";
 import AnkAPISideBar from "./app-bar/ankapi-sidebar";
 import UIBaseContentPage from "./content-page";
-import UICreateAPIPage from "./contents/create-api.page";
 import UIEmptyContentPage from "./contents/empty-content.page";
 import { MenuItemData } from "@/common/menu-item";
+import dynamic from "next/dynamic";
+import { Backdrop, CircularProgress } from "@mui/material";
+import Loading from "@/app/dashboard/loading";
+
+const UICreateAPIPage = dynamic(()=>import("./contents/create-api.page"),
+{
+  loading:()=> 
+      <p>Loading...</p>,
+      ssr:false
+});
+
 
 export default function Dashboard() {
   const theme = useTheme();
@@ -43,11 +52,12 @@ export default function Dashboard() {
     const contentPage = menuList.find(
       (x) => x.MenuKey === menuKey
     )?.PageContent;
-    return contentPage ? contentPage : <UIEmptyContentPage />;
+
+    return contentPage ?  contentPage : <UIEmptyContentPage />;
   }
 
   return (
-    <Box sx={{  display: "flex", flexDirection:"row", alignItems:"stretch"}}>
+    <Box sx={{  display: "flex", flexDirection:"row", height:"100%", backgroundColor:"gray", alignItems:"stretch"}}>
       <CssBaseline />
       <AnkAPIAppBar
         Title={""}
@@ -58,7 +68,7 @@ export default function Dashboard() {
       <AnkAPISideBar
         OnClickSidebarButton={OnClickSideButton}
         MenuListMeta={menuList}
-        OnChangedSelectedMenu={OnSelectedMenu} IsOpen={false} />
+        OnChangedSelectedMenu={OnSelectedMenu} IsOpen={false} />  
       <UIBaseContentPage>{getPage(selectedMenuKey)}</UIBaseContentPage>
     </Box>
   );

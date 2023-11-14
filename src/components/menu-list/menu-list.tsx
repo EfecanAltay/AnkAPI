@@ -70,7 +70,7 @@ export default function AnkAPIMenuList(menuList: MenuListMeta) {
           sx={{ borderRadius: 0, maxWidth: 400, backgroundColor:"--mui-palette-primary-light"}}
         >
           <FireNav component="nav" disablePadding dense={false}>
-            <ListItemButton component="a" href="#customized-list">
+            <ListItemButton key="test" component="a" href="#customized-list">
               <ListItemText
                 sx={{ my: 0 }}
                 primary="Menu Header"

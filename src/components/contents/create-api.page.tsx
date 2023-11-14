@@ -20,9 +20,8 @@ import {
 import SendIcon from "@mui/icons-material/Send";
 import Paper from "@mui/material/Paper";
 import DataGrid from "../data-grid/data-grid.component";
-import { DataGridCellRule, DataGridCellType, DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
+import { DataGridCellType, DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
 import { DataGridCell, DataGridColHeader, DataGridRow } from "@/common/data-grid/data-grid.classes";
-import AnkAPIMenuList from "../menu-list/menu-list";
 
 //#region TabPanel
 
