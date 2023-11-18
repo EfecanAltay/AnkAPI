@@ -4,4 +4,5 @@ export class MenuItemMeta {
     public MenuItemData: MenuItemData;
     public OnMouseEnter? = () => {};
     public OnMouseLeave? = () => {};
+    public OnShowingChanged? = (isShowng: boolean) => {};
 }

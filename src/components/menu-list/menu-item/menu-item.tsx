@@ -12,7 +12,7 @@ import "./menu-item.css";
 
 export default function AnkAPIMenuItem(menuItemMeta: MenuItemMeta) {
   const theme = useTheme();
-  const [selecteMenuKey, setSelecteMenuKey] = React.useState("");
+  const [childrenShowing, setChildrenShowing] = React.useState(false);
   console.log(menuItemMeta.MenuItemData?.MenuKey);
   return (
     <ListItem
@@ -23,12 +23,14 @@ export default function AnkAPIMenuItem(menuItemMeta: MenuItemMeta) {
       onMouseLeave={()=>menuItemMeta?.OnMouseLeave?.()}
       onClick={() => {
         clickItem(menuItemMeta.MenuItemData);
+        setChildrenShowing(!childrenShowing);
+        menuItemMeta.OnShowingChanged?.(childrenShowing);
       }}>
       {
         menuItemMeta.MenuItemData.Children ? 
         (
           <ListItemIcon style={{ cursor: "pointer", margin: "0" }}>
-            <ChevronRightIcon />
+            <ChevronRightIcon style={{ animation: `${childrenShowing ? 'showChildrenIcon' : 'hideChildrenIcon'} 0.4s forwards`} }/>
           </ListItemIcon>
         ) : (
           <ListItemIcon style={{ cursor: "pointer", marginLeft: "10px" }}>
@@ -36,7 +38,7 @@ export default function AnkAPIMenuItem(menuItemMeta: MenuItemMeta) {
           </ListItemIcon>
         )
       }
-      <ListItemText style={{ cursor: "pointer"}}>
+      <ListItemText style={{ userSelect:"none", cursor: "pointer", display:"block"}}>
         {menuItemMeta.MenuItemData?.Name}
       </ListItemText>
     </ListItem>

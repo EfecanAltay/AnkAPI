@@ -5,7 +5,6 @@ import {
   List,
   ListItemButton,
   ListItemText,
-  MenuItem,
   Paper,
   ThemeProvider,
   createTheme,
@@ -62,8 +61,7 @@ export default function AnkAPIMenuList(menuList: MenuListMeta) {
             primary: { main:  "#082e50" },
             background: { paper: "#082e50" },
           },
-        })}
-      >
+        })}>
         <Paper
           elevation={0}
           className="menulist"
@@ -72,7 +70,7 @@ export default function AnkAPIMenuList(menuList: MenuListMeta) {
           <FireNav component="nav" disablePadding dense={false}>
             <ListItemButton key="test" component="a" href="#customized-list">
               <ListItemText
-                sx={{ my: 0 }}
+                sx={{ marginLeft: 5 }}
                 primary="Menu Header"
                 primaryTypographyProps={{
                   fontSize: 20,
@@ -113,7 +111,6 @@ function renderMenuList(
 function renderMenuItem(
   menuItemData: MenuItemData
 ) {
-  let childColor = "tranparent"; 
   const ref = React.createRef<HTMLDivElement>();
   function OnMouseEnter(){
     ref.current?.style.setProperty("background-color","var(--mui-palette-selected-menu-item-light)");
@@ -123,12 +120,16 @@ function renderMenuItem(
     ref.current?.style.setProperty("background-color","transparent");
   }
 
+  function onShowingChanged(isShowing: boolean){
+    ref.current?.style.setProperty("animation",`${isShowing ? "showChildrenList" : "hideChildrenList" } 0.4s forwards`);
+  }
+
   return  (
   <div>
-    <AnkAPIMenuItem OnMouseEnter={OnMouseEnter} OnMouseLeave={onMouseLeave} MenuItemData={menuItemData}  />
+    <AnkAPIMenuItem OnMouseEnter={OnMouseEnter} OnMouseLeave={onMouseLeave} OnShowingChanged={onShowingChanged} MenuItemData={menuItemData} />
     {
       menuItemData?.Children && menuItemData?.Children?.length > 0 && 
-      <div id={menuItemData.MenuKey} ref={ref}  style={{ marginLeft: `25px`, backgroundColor:childColor}}>
+      <div id={menuItemData.MenuKey} ref={ref}  style={{ marginLeft: `25px`}}>
             {
               menuItemData?.Children?.map((child)=>renderMenuItem(child))
             }

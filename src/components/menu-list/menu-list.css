@@ -1,7 +1,25 @@
-.menulist{
-  
+@keyframes showChildrenList {
+    0% {
+        height: 0px;
+        opacity: 0;
+    }
+    100% {
+        height: "100%";
+        opacity: 1;
+    }
 }
-
-.childList:hover{
-    background-color: r;
+  
+@keyframes hideChildrenList {
+    0% {
+        height: "100%";
+        opacity: 1;
+    }
+    40% {
+        height: "100%";
+        opacity: 0;
+    }
+    100% {
+        height: 0px;
+        opacity: 0;
+    }
 }
