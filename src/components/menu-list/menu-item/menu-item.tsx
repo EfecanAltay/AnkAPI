@@ -19,9 +19,8 @@ export default function AnkAPIMenuItem(menuItemMeta: MenuItemMeta) {
       disablePadding
       className="menuItem"
       key={menuItemMeta.MenuItemData?.MenuKey}
-      sx={{
-        paddingLeft: `calc(${menuItemMeta.MenuItemData.ParentIndex * 25}px + ${menuItemMeta.MenuItemData.Children ? 0 : 20}px)`
-      }}
+      onMouseEnter={()=>menuItemMeta?.OnMouseEnter?.()}
+      onMouseLeave={()=>menuItemMeta?.OnMouseLeave?.()}
       onClick={() => {
         clickItem(menuItemMeta.MenuItemData);
       }}>
@@ -32,7 +31,7 @@ export default function AnkAPIMenuItem(menuItemMeta: MenuItemMeta) {
             <ChevronRightIcon />
           </ListItemIcon>
         ) : (
-          <ListItemIcon style={{ cursor: "pointer", margin: "0" }}>
+          <ListItemIcon style={{ cursor: "pointer", marginLeft: "10px" }}>
            
           </ListItemIcon>
         )

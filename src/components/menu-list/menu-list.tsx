@@ -113,12 +113,27 @@ function renderMenuList(
 function renderMenuItem(
   menuItemData: MenuItemData
 ) {
+  let childColor = "tranparent"; 
+  const ref = React.createRef<HTMLDivElement>();
+  function OnMouseEnter(){
+    ref.current?.style.setProperty("background-color","var(--mui-palette-selected-menu-item-light)");
+  }
+
+  function onMouseLeave(){
+    ref.current?.style.setProperty("background-color","transparent");
+  }
+
   return  (
-  <span>
-    <AnkAPIMenuItem MenuItemData={menuItemData}  />
+  <div>
+    <AnkAPIMenuItem OnMouseEnter={OnMouseEnter} OnMouseLeave={onMouseLeave} MenuItemData={menuItemData}  />
     {
-       menuItemData?.Children?.map((child)=>renderMenuItem(child))
+      menuItemData?.Children && menuItemData?.Children?.length > 0 && 
+      <div id={menuItemData.MenuKey} ref={ref}  style={{ marginLeft: `25px`, backgroundColor:childColor}}>
+            {
+              menuItemData?.Children?.map((child)=>renderMenuItem(child))
+            }
+      </div>
     }
-  </span>
+  </div>
   );
 }
