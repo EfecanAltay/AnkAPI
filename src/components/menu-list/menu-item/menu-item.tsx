@@ -13,7 +13,6 @@ import "./menu-item.css";
 export default function AnkAPIMenuItem(menuItemMeta: MenuItemMeta) {
   const theme = useTheme();
   const [childrenShowing, setChildrenShowing] = React.useState(false);
-  console.log(menuItemMeta.MenuItemData?.MenuKey);
   return (
     <ListItem
       disablePadding

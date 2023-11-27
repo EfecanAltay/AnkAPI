@@ -7,16 +7,18 @@ import { Backdrop, Box, CircularProgress, Theme, useTheme } from "@mui/material"
 import { ContentMeta } from "@/common/content-meta";
 import AnkAPIMenuList from "./menu-list/menu-list";
 import { MenuItemData } from "@/common/menu-item";
+import AnkAPIContentTab from "./content-tab/content-tab";
+import { ContentTabItem } from "@/common/content-tab-meta";
 
 function getContentWidth(window: Window, theme: Theme) {
   if (typeof window !== "undefined")
     return window.innerWidth - Number.parseInt(theme.spacing(10))-20;
-  else return 120;
+  else return 100;
 }
 function getContentHeight(window: Window, theme: Theme) {
   if (typeof window !== "undefined")
-    return window.innerHeight - Number.parseInt(theme.spacing(8));
-  else return 100;
+    return window.innerHeight - Number.parseInt(theme.spacing(8))-40;
+  else return 80;
 }
 
 const mockMenuListData = 
@@ -82,12 +84,17 @@ function prepareMenuData(menuItemDataList : MenuItemData[]){
   return menuItemDataList;
 }
 
+let openedPageList : ContentTabItem[] = [];
+
 export default function UIBaseContentPage(contentMeta: ContentMeta) {
   const theme = useTheme();
+  const [, forceUpdate] = React.useReducer(x => x + 1, 0);
   const [contentSize, setContentSize] = React.useState([0, 0]);
   const [sideBarShowing, setSideBarShowing] = React.useState(false);
   const [showLoading, setShowLoading] = React.useState(false);
-  
+
+
+
   const menuList = prepareMenuData(mockMenuListData as MenuItemData[])
 
   React.useEffect(() => {
@@ -108,7 +115,7 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
         getContentWidth(window, theme),
         getContentHeight(window, theme),
       ]);
-      console.log(contentSize);
+      //console.log(contentSize);
     }
     window.addEventListener("resize", updateSize);
     updateSize();
@@ -122,11 +129,14 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
         mt: 8,
         width: contentSize[0],
         padding:0,
-        height: "calc(100%) - 10px",
+        maxHeight: "calc(100%) - 30px",
       }} >
       <div className="container" style={{ minWidth:contentSize[0]}}>
         <div className="leftMenu">
           <AnkAPIMenuList MenuItemList={menuList} ></AnkAPIMenuList>
+        </div>
+        <div className="content-tab">
+          <AnkAPIContentTab SelectedContentKey={"TEST1"} contentTabList={openedPageList} />
         </div>
         <div className="content">
         {contentMeta?.children}     
