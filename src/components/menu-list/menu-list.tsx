@@ -68,8 +68,9 @@ export default function AnkAPIMenuList(menuList: MenuListMeta) {
           sx={{ borderRadius: 0, maxWidth: 400, backgroundColor:"--mui-palette-primary-light"}}
         >
           <FireNav component="nav" disablePadding dense={false}>
-            <ListItemButton key="test" component="a" href="#customized-list">
+            <ListItemButton key="test99" component="a" href="#customized-list">
               <ListItemText
+                key="test98" 
                 sx={{ marginLeft: 5 }}
                 primary="Menu Header"
                 primaryTypographyProps={{
@@ -126,10 +127,10 @@ function renderMenuItem(
 
   return  (
   <div>
-    <AnkAPIMenuItem OnMouseEnter={OnMouseEnter} OnMouseLeave={onMouseLeave} OnShowingChanged={onShowingChanged} MenuItemData={menuItemData} />
+    <AnkAPIMenuItem key={menuItemData.MenuKey} OnMouseEnter={OnMouseEnter} OnMouseLeave={onMouseLeave} OnShowingChanged={onShowingChanged} MenuItemData={menuItemData} />
     {
       menuItemData?.Children && menuItemData?.Children?.length > 0 && 
-      <div id={menuItemData.MenuKey} ref={ref}  style={{ marginLeft: `25px`}}>
+      <div id={menuItemData.MenuKey+'_children'} ref={ref}  style={{ marginLeft: `25px`}}>
             {
               menuItemData?.Children?.map((child)=>renderMenuItem(child))
             }

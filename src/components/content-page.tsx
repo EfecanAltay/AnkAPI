@@ -133,7 +133,7 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
       }} >
       <div className="container" style={{ minWidth:contentSize[0]}}>
         <div className="leftMenu">
-          <AnkAPIMenuList MenuItemList={menuList} ></AnkAPIMenuList>
+          <AnkAPIMenuList key={"leftMenu"} MenuItemList={menuList} ></AnkAPIMenuList>
         </div>
         <div className="content-tab">
           <AnkAPIContentTab SelectedContentKey={"TEST1"} contentTabList={openedPageList} />

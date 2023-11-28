@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Box, ThemeProvider, createTheme, useTheme } from "@mui/material";
+import { Box, IconButton, ThemeProvider, createTheme, useTheme } from "@mui/material";
 import {
   ContentTabItem,
   ContentTabItemMeta,
@@ -8,6 +8,7 @@ import {
 import "./content-tab.css";
 import AnkAPIContentTabItem from "./content-tab-item";
 import { DndContext, DragOverlay, UniqueIdentifier } from "@dnd-kit/core";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import {
   AnimateLayoutChanges,
   arrayMove,
@@ -64,7 +65,7 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
   function selectContentPage(contentTabItem: ContentTabItem) {
     items.forEach((contentPage) => {
       contentPage.IsSelected = contentPage.PageKey === contentTabItem.PageKey;
-      contentPage.Referance?.current.UpdateAction();
+      contentPage.Referance?.current?.UpdateAction();
     });
   }
 
@@ -110,6 +111,7 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
       >
         <div className="pageBarList">
           <DndContext
+            id = {React.useId()}
             onDragStart={({ active }) => {
               if (!active) {
                 return;
@@ -140,6 +142,9 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
             </SortableContext>
             <DragOverlay dropAnimation={null}></DragOverlay>
           </DndContext>
+          <IconButton aria-label="fingerprint">
+            <AddCircleOutlineIcon />
+          </IconButton>
         </div>
       </ThemeProvider>
     </Box>
