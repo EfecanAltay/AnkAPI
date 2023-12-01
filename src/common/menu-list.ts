@@ -1,8 +1,8 @@
-import { MenuItemData } from "./menu-item";
+import { ContentMenuItem } from "./content-meta";
 
-export class MenuListMeta {
-    public OnClickSidebarButton?: () => any;
-    public MenuItemList: MenuItemData[] = [];
+export class ContentMenuListMeta {
+    public MenuItemList?: ContentMenuItem[];
     public SelectedMenuKey?: string;
     public OnChangedSelectedMenu?: (SelectedMenuKey: string) => any;
+    public ShowContentAction?: (item: ContentMenuItem) => void;
 }

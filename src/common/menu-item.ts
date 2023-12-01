@@ -1,3 +1,5 @@
+import { ContentHeaderInfo } from "./content-meta";
+
 export class MenuItemData {
     public selecteMenuKey: string = "";
     public MenuKey: string = "";
@@ -5,6 +7,7 @@ export class MenuItemData {
     public IconContent: any;
     public IsSelected: boolean = false;
     public PageContent: any;
+    public ContentHeaderInfo : ContentHeaderInfo = new ContentHeaderInfo();
     
     public Children : MenuItemData[] | null = null;
     public Parent : MenuItemData | null = null;

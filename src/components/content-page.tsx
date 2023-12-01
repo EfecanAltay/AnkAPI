@@ -4,11 +4,13 @@ import "./components.css";
 import "./content-page.css";
 import * as React from "react";
 import { Backdrop, Box, CircularProgress, Theme, useTheme } from "@mui/material";
-import { ContentMeta } from "@/common/content-meta";
+import { ContentMenuItem, ContentMeta } from "@/common/content-meta";
 import AnkAPIMenuList from "./menu-list/menu-list";
 import { MenuItemData } from "@/common/menu-item";
 import AnkAPIContentTab from "./content-tab/content-tab";
 import { ContentTabItem } from "@/common/content-tab-meta";
+import { ContentHeader } from "./content-header/content-header";
+import { MenuItemMeta } from "@/common/menu-item-meta";
 
 function getContentWidth(window: Window, theme: Theme) {
   if (typeof window !== "undefined")
@@ -21,52 +23,7 @@ function getContentHeight(window: Window, theme: Theme) {
   else return 80;
 }
 
-const mockMenuListData = 
-[
-  {
-    Name : "TEST 0",
-    MenuKey : "TEST0",
-    Children : 
-    [
-      {
-        Name : "TEST 00",
-        MenuKey : "TEST00"
-      }
-    ]
-  },
-  {
-    Name : "TEST 1",
-    MenuKey : "TEST1"
-  },
-  {
-    Name : "TEST 2",
-    MenuKey : "TEST2",
-    Children : 
-    [
-      {
-        Name : "TEST 20",
-        MenuKey : "TEST20",
-        Children : 
-        [
-          {
-            Name : "TEST 200",
-            MenuKey : "TEST200"
-          },
-          {
-            Name : "TEST 201",
-            MenuKey : "TEST201"
-          }
-        ]
-      },
-      {
-        Name : "TEST 21",
-        MenuKey : "TEST21"
-      }
-    ]
-  }
-];
-
-function prepareMenuData(menuItemDataList : MenuItemData[]){
+function prepareMenuData(menuItemDataList : ContentMenuItem[]){
   menuItemDataList.forEach(menuItemData=>{
     if(!menuItemData.ParentIndex)
     menuItemData.ParentIndex = 0;
@@ -77,7 +34,7 @@ function prepareMenuData(menuItemDataList : MenuItemData[]){
         child.ParentIndex = menuItemData.ParentIndex + 1 ;
 
         if(child.Children)
-          prepareMenuData(menuItemData.Children as MenuItemData[]);
+          prepareMenuData(menuItemData.Children as ContentMenuItem[]);
       });
     }
   });
@@ -88,14 +45,13 @@ let openedPageList : ContentTabItem[] = [];
 
 export default function UIBaseContentPage(contentMeta: ContentMeta) {
   const theme = useTheme();
-  const [, forceUpdate] = React.useReducer(x => x + 1, 0);
   const [contentSize, setContentSize] = React.useState([0, 0]);
   const [sideBarShowing, setSideBarShowing] = React.useState(false);
   const [showLoading, setShowLoading] = React.useState(false);
 
-
-
-  const menuList = prepareMenuData(mockMenuListData as MenuItemData[])
+  let menuList = contentMeta.ContentHeaderInfo?.ContentMenuList;
+  if(menuList && menuList.length > 0)
+    menuList = prepareMenuData(contentMeta.ContentHeaderInfo?.ContentMenuList as ContentMenuItem[]);
 
   React.useEffect(() => {
     function sidebarOpenAction(customEvent: any) {
@@ -122,6 +78,19 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
     return () => window.removeEventListener("resize", updateSize);
   }, [theme, sideBarShowing]);
 
+  function ShowContentAction(item:ContentMenuItem): void {
+    console.log(item);
+  }
+
+  const contentMenu = contentMeta.ContentHeaderInfo?.IsHaveContentMenu === true ?
+  <div className="leftMenu">
+    <AnkAPIMenuList key={"leftMenu"} MenuItemList={menuList} ShowContentAction={ShowContentAction} ></AnkAPIMenuList>
+  </div> : null;
+  const contentTab = contentMeta.ContentHeaderInfo?.IsHaveContentTab === true ?
+  <div className="content-tab">
+    <AnkAPIContentTab SelectedContentKey={"TEST1"} />
+  </div>: null;
+
   return (
     <Box
       sx={{
@@ -132,12 +101,8 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
         maxHeight: "calc(100%) - 30px",
       }} >
       <div className="container" style={{ minWidth:contentSize[0]}}>
-        <div className="leftMenu">
-          <AnkAPIMenuList key={"leftMenu"} MenuItemList={menuList} ></AnkAPIMenuList>
-        </div>
-        <div className="content-tab">
-          <AnkAPIContentTab SelectedContentKey={"TEST1"} contentTabList={openedPageList} />
-        </div>
+        {contentMenu}
+        {contentTab}
         <div className="content">
         {contentMeta?.children}     
         </div>  

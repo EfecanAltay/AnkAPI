@@ -139,8 +139,7 @@ export default function UICreateAPIPage() {
         backgroundColor: "white",
         flexGrow: "initial",
         p: 2,
-      }}
-    >
+      }} >
       <Grid container spacing={2}>
         <Grid item sm={1} md={1} xs={1}>
           <Select

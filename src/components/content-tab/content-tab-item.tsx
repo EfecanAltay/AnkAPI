@@ -52,7 +52,7 @@ const AnkAPIContentTabItem = React.forwardRef(
         {...attributes}
         {...listeners}
       >
-        {contentTabItemMeta.Data?.PageName}
+        {contentTabItemMeta.Data?.ContentName}
         {contentTabItemMeta.Data?.IsSelected || isHover ? (
         <IconButton className="pageBarCloseButton">
                   <HighlightOffIcon />

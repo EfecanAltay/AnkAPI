@@ -13,9 +13,18 @@
 }
 
 .content-tab {
-  height: 55px;
+  height:50px;
   float: left;
   background-color: #082e50;
+  width: calc(100% - 220px);
+}
+
+.content-header {
+  height: 55px;
+  float: left;
+  z-index: 1;
+  background-color: var(--mui-primary-dark);
+  border-bottom: 1px solid gray;
   width: calc(100% - 220px);
 }
 

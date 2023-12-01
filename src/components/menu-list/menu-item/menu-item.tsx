@@ -13,6 +13,7 @@ import "./menu-item.css";
 export default function AnkAPIMenuItem(menuItemMeta: MenuItemMeta) {
   const theme = useTheme();
   const [childrenShowing, setChildrenShowing] = React.useState(false);
+
   return (
     <ListItem
       disablePadding
@@ -21,7 +22,7 @@ export default function AnkAPIMenuItem(menuItemMeta: MenuItemMeta) {
       onMouseEnter={()=>menuItemMeta?.OnMouseEnter?.()}
       onMouseLeave={()=>menuItemMeta?.OnMouseLeave?.()}
       onClick={() => {
-        clickItem(menuItemMeta.MenuItemData);
+        menuItemMeta.OnClick?.(menuItemMeta.MenuItemData);
         setChildrenShowing(!childrenShowing);
         menuItemMeta.OnShowingChanged?.(childrenShowing);
       }}>
@@ -59,5 +60,3 @@ function renderIcon(menuItem: MenuItemData | undefined) {
     );
   }
 }
-
-function clickItem(menuItem: MenuItemData | undefined) {}

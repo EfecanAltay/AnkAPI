@@ -19,9 +19,36 @@ import {
 export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
   const theme = useTheme();
   const [selectedContentKey, setSelectedContentKey] = React.useState("");
-  const [items, setItems] = React.useState<ContentTabItem[]>(
-    initMockPageList()
-  );
+  const [items, setItems] = React.useState<ContentTabItem[]>(getOpenedContentPages());
+
+  //** Opened Content Pages **/
+  
+  function prepareTabList(items : ContentTabItem[] | undefined) {
+    if(items && items.length > 0){
+      items.forEach((tabItem, index) => {
+        tabItem.SelectCallbackAction = selectContentPage;
+        tabItem.Id = index + 1;
+      });
+      return items;
+    }
+    return [];   
+  }
+
+  function getOpenedContentPages(){
+    const openedPages : ContentTabItem[] = [];
+    // TODO : Load from Cache
+    // const p0 = new ContentTabItem();
+    // p0.ContentName = "TEST 0";
+    // p0.ContentKey = "TEST0";
+    // p0.IsSelected = true;
+    // openedPages.push(p0);
+    // const p1 = new ContentTabItem();
+    // p1.ContentName = "TEST 1";
+    // p1.ContentKey = "TEST1";
+    // openedPages.push(p1);
+    return prepareTabList(openedPages);
+  }
+  //**************************/
   
   const [activeId, setActiveId] = React.useState<UniqueIdentifier | null>(null);
 
@@ -38,33 +65,9 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
   const animateLayoutChanges: AnimateLayoutChanges = (args) =>
     defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
-  function initMockPageList() {
-    const openedPageList = [];
-    const cp = new ContentTabItem();
-    cp.PageKey = "TEST0";
-    cp.PageName = "TEST 0";
-    cp.IsSelected = true;
-    cp.SelectCallbackAction = selectContentPage;
-    const cp1 = new ContentTabItem();
-    cp1.PageKey = "TEST1";
-    cp1.PageName = "TEST 1";
-    cp1.SelectCallbackAction = selectContentPage;
-    const cp2 = new ContentTabItem();
-    cp2.PageKey = "TEST2";
-    cp2.PageName = "TEST 2";
-    cp2.SelectCallbackAction = selectContentPage;
-    openedPageList.push(cp);
-    openedPageList.push(cp1);
-    openedPageList.push(cp2);
-    openedPageList.forEach((tabItem, index) => {
-      tabItem.Id = index + 1;
-    });
-    return openedPageList;
-  }
-
   function selectContentPage(contentTabItem: ContentTabItem) {
     items.forEach((contentPage) => {
-      contentPage.IsSelected = contentPage.PageKey === contentTabItem.PageKey;
+      contentPage.IsSelected = contentPage.ContentKey === contentTabItem.ContentKey;
       contentPage.Referance?.current?.UpdateAction();
     });
   }
