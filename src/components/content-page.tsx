@@ -29,8 +29,6 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   const [showLoading, setShowLoading] = React.useState(false);
 
   let menuList = contentMeta.ContentHeaderInfo?.ContentMenuList ? contentMeta.ContentHeaderInfo?.ContentMenuList : [];
-  // if(menuList && menuList.length > 0)
-  //   menuList = prepareMenuData(contentMeta.ContentHeaderInfo?.ContentMenuList as ContentMenuItem[]);
 
   React.useEffect(() => {
     function sidebarOpenAction(customEvent: any) {

@@ -22,7 +22,7 @@ import {
   Tree,
   getBackendOptions,
 } from "@minoru/react-dnd-treeview";
-import { useState } from "react";
+import { useReducer, useState } from "react";
 import { CustomNode } from "./custom-node";
 import menuStyle from "./content-menu.module.css";
 
@@ -63,6 +63,7 @@ export class ContentMenuProvider {
           Name: element.Name,
           MenuKey: element.MenuKey,
           MenuType: element.MenuType,
+          Selectable: element.MenuType === ContentMenuItemType.Content,
           haveChildren:
             element.Children && element.Children.length > 0 ? true : false,
         } as ContentMenuItem,
@@ -85,7 +86,7 @@ export class ContentMenuProvider {
 
   public static GetNodeModelToContentMenu(
     menuList: NodeModel<ContentMenuItem>[]
-  ){
+  ) {
     const resultList: ContentMenuItem[] = [];
     menuList.forEach((node) => {
       const parentContentMenuItem = node.data;
@@ -93,10 +94,11 @@ export class ContentMenuProvider {
         const children = menuList.filter((x) => x.parent === node.id);
         parentContentMenuItem.haveChildren = children && children.length > 0;
         if (parentContentMenuItem && parentContentMenuItem.haveChildren) {
-          parentContentMenuItem.Children = children.map(x=> x.data) as ContentMenuItem[];
+          parentContentMenuItem.Children = children.map(
+            (x) => x.data
+          ) as ContentMenuItem[];
         }
-        if(node.parent === 0)
-          resultList.push(parentContentMenuItem);
+        if (node.parent === 0) resultList.push(parentContentMenuItem);
       }
     });
     return resultList;
@@ -109,6 +111,7 @@ export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
   const [draggedMenuName, setDraggedMenuName] = useState<
     ContentMenuItem | undefined
   >(undefined);
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
 
   const menu = ContentMenuProvider.GetContentMenuConvert(
     contentMenuList.ContentMenuList
@@ -117,9 +120,7 @@ export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
   const handleDrop = (newTreeData: NodeModel<ContentMenuItem>[]) => {
     let nList = ContentMenuProvider.GetNodeModelToContentMenu(newTreeData);
     console.log(nList);
-    newTreeData = ContentMenuProvider.GetContentMenuConvert(
-      nList
-    );
+    newTreeData = ContentMenuProvider.GetContentMenuConvert(nList);
     setTreeData(newTreeData);
   };
 
@@ -127,9 +128,20 @@ export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
     return newTreeData.droppable;
   };
 
-  function onClickMenuItem(menuItemData: ContentMenuItem) {
-    if (menuItemData && menuItemData.MenuType === ContentMenuItemType.Content)
-      contentMenuList.ShowContentAction?.(menuItemData);
+  function onSelectedMenuItem(id: string | number) {
+    for (let i = 0; i < treeData.length ; i++) {
+      let data = treeData[i];
+      if (data.id === id && data.data){
+        data.data.IsSelected = true;
+        treeData[i] = data ;
+        setTreeData(treeData);
+        forceUpdate();
+        contentMenuList.ShowContentAction?.(data.data);
+      }
+      else if (data.data){
+        data.data.IsSelected = false;
+      }
+    }
   }
 
   return (
@@ -187,6 +199,7 @@ export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
                         node={node}
                         depth={depth}
                         isOpen={isOpen}
+                        onSelected={onSelectedMenuItem}
                         onToggle={onToggle}
                       />
                     )}

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import Typography from "@mui/material/Typography";
 import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { NodeModel } from "@minoru/react-dnd-treeview";
@@ -11,6 +11,7 @@ type Props = {
   depth: number;
   isOpen: boolean;
   onToggle: (id: NodeModel["id"]) => void;
+  onSelected: (id: NodeModel["id"]) => void;
 };
 
 export const CustomNode: React.FC<Props> = (props) => {
@@ -22,10 +23,16 @@ export const CustomNode: React.FC<Props> = (props) => {
     props.onToggle(props.node.id);
   };
 
+  const onSelectMenu = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if(data?.Selectable)
+      props.onSelected(props.node.id);
+  };
+
   return (
     <div
       className={`tree-node ${styles.root}`}
-      style={{ paddingInlineStart: indent }}
+      style={{ paddingInlineStart: indent, backgroundColor: data?.IsSelected ? "red" : "transparent" }}
     >
       <div
         className={`${styles.expandIconWrapper} ${
@@ -41,7 +48,7 @@ export const CustomNode: React.FC<Props> = (props) => {
       <div>
         <ContentMenuItemIcon menuType={data?.MenuType} />
       </div>
-      <div className={styles.labelGridItem}>
+      <div onClick={onSelectMenu} className={styles.labelGridItem} style={{cursor: data?.Selectable ? 'pointer' :'default'}}>
         <Typography variant="body2">{props.node.text}</Typography>
       </div>
     </div>

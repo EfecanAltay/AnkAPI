@@ -20,11 +20,13 @@ export class ContentMenuItem {
     public Name: string = "";
     public IconContent: any;
     public MenuType: ContentMenuItemType = ContentMenuItemType.Content;
-    public IsSelected: boolean = false;
     public PageContent: any;
     public ContentHeaderInfo : ContentHeaderInfo = new ContentHeaderInfo();
     public Children : ContentMenuItem[] = [];
     public haveChildren : boolean = false; 
+    
+    public Selectable: boolean = false;
+    public IsSelected: boolean = false;
 }
 
 export enum ContentMenuItemType{
