@@ -5,12 +5,9 @@ import "./content-page.css";
 import * as React from "react";
 import { Backdrop, Box, CircularProgress, Theme, useTheme } from "@mui/material";
 import { ContentMenuItem, ContentMeta } from "@/common/content-meta";
-import AnkAPIMenuList from "./menu-list/menu-list";
-import { MenuItemData } from "@/common/menu-item";
 import AnkAPIContentTab from "./content-tab/content-tab";
 import { ContentTabItem } from "@/common/content-tab-meta";
-import { ContentHeader } from "./content-header/content-header";
-import { MenuItemMeta } from "@/common/menu-item-meta";
+import ContentMenu from "./menu-list/content-menu";
 
 function getContentWidth(window: Window, theme: Theme) {
   if (typeof window !== "undefined")
@@ -23,24 +20,6 @@ function getContentHeight(window: Window, theme: Theme) {
   else return 80;
 }
 
-function prepareMenuData(menuItemDataList : ContentMenuItem[]){
-  menuItemDataList.forEach(menuItemData=>{
-    if(!menuItemData.ParentIndex)
-    menuItemData.ParentIndex = 0;
-    if(menuItemData.Children && menuItemData.Children.length > 0)
-    {
-      menuItemData.Children.forEach(child=>{
-        child.Parent = menuItemData;
-        child.ParentIndex = menuItemData.ParentIndex + 1 ;
-
-        if(child.Children)
-          prepareMenuData(menuItemData.Children as ContentMenuItem[]);
-      });
-    }
-  });
-  return menuItemDataList;
-}
-
 let openedPageList : ContentTabItem[] = [];
 
 export default function UIBaseContentPage(contentMeta: ContentMeta) {
@@ -49,9 +28,9 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   const [sideBarShowing, setSideBarShowing] = React.useState(false);
   const [showLoading, setShowLoading] = React.useState(false);
 
-  let menuList = contentMeta.ContentHeaderInfo?.ContentMenuList;
-  if(menuList && menuList.length > 0)
-    menuList = prepareMenuData(contentMeta.ContentHeaderInfo?.ContentMenuList as ContentMenuItem[]);
+  let menuList = contentMeta.ContentHeaderInfo?.ContentMenuList ? contentMeta.ContentHeaderInfo?.ContentMenuList : [];
+  // if(menuList && menuList.length > 0)
+  //   menuList = prepareMenuData(contentMeta.ContentHeaderInfo?.ContentMenuList as ContentMenuItem[]);
 
   React.useEffect(() => {
     function sidebarOpenAction(customEvent: any) {
@@ -84,7 +63,7 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
 
   const contentMenu = contentMeta.ContentHeaderInfo?.IsHaveContentMenu === true ?
   <div className="leftMenu">
-    <AnkAPIMenuList key={"leftMenu"} MenuItemList={menuList} ShowContentAction={ShowContentAction} ></AnkAPIMenuList>
+    <ContentMenu key={"leftMenu"} ContentMenuList={menuList} ShowContentAction={ShowContentAction} ></ContentMenu>
   </div> : null;
   const contentTab = contentMeta.ContentHeaderInfo?.IsHaveContentTab === true ?
   <div className="content-tab">

@@ -23,17 +23,8 @@ export class ContentMenuItem {
     public IsSelected: boolean = false;
     public PageContent: any;
     public ContentHeaderInfo : ContentHeaderInfo = new ContentHeaderInfo();
-    
-    public Children? : ContentMenuItem[];
-    public Parent? : ContentMenuItem;
-    public ParentIndex : number = 0;
-
-    /**
-     *
-     */
-    constructor() {
-        this.ParentIndex = 0;
-    }
+    public Children : ContentMenuItem[] = [];
+    public haveChildren : boolean = false; 
 }
 
 export enum ContentMenuItemType{

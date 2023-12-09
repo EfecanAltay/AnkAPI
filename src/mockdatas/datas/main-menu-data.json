@@ -1,0 +1,15 @@
+[
+    {
+        "Name": "API Request",
+        "MenuKey": "CAR",
+        "PageContent": "<UICreateAPIPage />",
+        "ContentHeaderInfo": {
+            "IsHaveContentMenu": true,
+            "IsHaveContentTab": true
+        }
+    },
+    {
+        "Name": "Request Flow",
+        "MenuKey": "RF"
+    }
+]

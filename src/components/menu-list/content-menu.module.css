@@ -1,0 +1,15 @@
+.app {
+  height: 100%;
+}
+
+.treeRoot {
+  height: 100%;
+}
+
+.draggingSource {
+  opacity: .1;
+}
+
+.dropTarget {
+  border: 1px solid white;
+}
