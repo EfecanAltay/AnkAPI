@@ -15,11 +15,14 @@ import {
   defaultAnimateLayoutChanges,
   SortableContext,
 } from "@dnd-kit/sortable";
+import { useReducer } from "react";
 
 export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
   const theme = useTheme();
   const [selectedContentKey, setSelectedContentKey] = React.useState("");
-  const [items, setItems] = React.useState<ContentTabItem[]>(getOpenedContentPages());
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  const [items, setItems] = React.useState<ContentTabItem[]>(prepareTabList(contentTabMeta.contentTabList));
+
 
   //** Opened Content Pages **/
   
@@ -34,20 +37,39 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
     return [];   
   }
 
-  function getOpenedContentPages(){
-    const openedPages : ContentTabItem[] = [];
-    // TODO : Load from Cache
-    // const p0 = new ContentTabItem();
-    // p0.ContentName = "TEST 0";
-    // p0.ContentKey = "TEST0";
-    // p0.IsSelected = true;
-    // openedPages.push(p0);
-    // const p1 = new ContentTabItem();
-    // p1.ContentName = "TEST 1";
-    // p1.ContentKey = "TEST1";
-    // openedPages.push(p1);
-    return prepareTabList(openedPages);
+  function AddTab(item?: ContentTabItem){
+    let tabItem = new ContentTabItem();
+    tabItem.Id = crypto.randomUUID();
+    
+    if(items.length > 0 )
+    {
+      let counter = 0;
+      do
+      {
+        let f_item = items.find(x=> x.ContentName === `New Page ${counter > 0 ? counter : ''}`);
+        if(f_item)
+        {          
+          counter = counter + 1;
+        }
+        else
+          break;
+      }while(true);
+      tabItem.ContentName = `New Page ${counter}`
+    }
+    else
+      tabItem.ContentName = "New Page "
+
+    
+    items.push(tabItem);
+    setItems(items);
+    forceUpdate();
   }
+
+  function RemoveTab(id: UniqueIdentifier){
+    setItems(items.filter(i=> i.Id !== id));
+    forceUpdate();
+  }
+
   //**************************/
   
   const [activeId, setActiveId] = React.useState<UniqueIdentifier | null>(null);
@@ -140,12 +162,13 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
                   UpdateAction={pageBar.UpdateAction}
                   key={index + 1}
                   Data={pageBar}
+                  CloseAction={(id)=>RemoveTab(id)}
                 />
               ))}
             </SortableContext>
             <DragOverlay dropAnimation={null}></DragOverlay>
           </DndContext>
-          <IconButton aria-label="fingerprint">
+          <IconButton onClick={()=>{ AddTab()}} aria-label="fingerprint">
             <AddCircleOutlineIcon />
           </IconButton>
         </div>

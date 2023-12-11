@@ -20,19 +20,17 @@ function getContentHeight(window: Window, theme: Theme) {
   else return 80;
 }
 
-let openedPageList : ContentTabItem[] = [];
-
 export default function UIBaseContentPage(contentMeta: ContentMeta) {
   const theme = useTheme();
   const [contentSize, setContentSize] = React.useState([0, 0]);
   const [sideBarShowing, setSideBarShowing] = React.useState(false);
   const [showLoading, setShowLoading] = React.useState(false);
+  const [openedPageList, setOpenedPageList] = React.useState<ContentTabItem[]>([]);
 
   let menuList = contentMeta.ContentHeaderInfo?.ContentMenuList ? contentMeta.ContentHeaderInfo?.ContentMenuList : [];
 
   React.useEffect(() => {
     function sidebarOpenAction(customEvent: any) {
-      
       setSideBarShowing(customEvent.detail);
       setContentSize([
         getContentWidth(window, theme),
@@ -56,7 +54,12 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   }, [theme, sideBarShowing]);
 
   function ShowContentAction(item:ContentMenuItem): void {
-    console.log(item);
+    const p0 = new ContentTabItem();
+    p0.ContentName = item.Name;
+    p0.ContentKey = item.MenuKey;
+    p0.IsSelected = true;
+    openedPageList.push(p0);
+    setOpenedPageList(openedPageList);
   }
 
   const contentMenu = contentMeta.ContentHeaderInfo?.IsHaveContentMenu === true ?
@@ -65,7 +68,7 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   </div> : null;
   const contentTab = contentMeta.ContentHeaderInfo?.IsHaveContentTab === true ?
   <div className="content-tab">
-    <AnkAPIContentTab SelectedContentKey={"TEST1"} />
+    <AnkAPIContentTab contentTabList={openedPageList} SelectedContentKey={"TEST1"} />
   </div>: null;
 
   return (

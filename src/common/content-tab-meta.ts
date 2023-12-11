@@ -8,15 +8,17 @@ export class ContentTabMeta {
 
 export class ContentTabItemMeta{
     public UpdateAction? = ()=>{};
+    public CloseAction? = (id:UniqueIdentifier)=>{};
     public Data? : ContentTabItem;
 }
 
 export class ContentTabItem{
     public Id: UniqueIdentifier = 0;
-    public Referance :  React.Ref<ContentTabItem> =  React.useRef(null);
+    public Referance :  React.Ref<ContentTabItem>;
     public ContentKey : string = "None";
     public ContentName : string = "None";
     public IsSelected : boolean = false;
+    public IsNotSaved : boolean = true;
 
     public SelectCallbackAction = (item: ContentTabItem)=>{};
     public CloseCallbackAction = (item: ContentTabItem)=>{};

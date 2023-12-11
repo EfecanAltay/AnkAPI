@@ -1,12 +1,12 @@
 import * as React from "react";
-import dynamic from 'next/dynamic';
+import dynamic from "next/dynamic";
 import { IconButton, useTheme } from "@mui/material";
 import { ContentTabItemMeta } from "@/common/content-tab-meta";
 import "./content-tab.css";
 import { useImperativeHandle } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 const AnkAPIContentTabItem = React.forwardRef(
   (contentTabItemMeta: ContentTabItemMeta, ref) => {
@@ -15,8 +15,10 @@ const AnkAPIContentTabItem = React.forwardRef(
     const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
 
     const { attributes, listeners, setNodeRef, transform, transition } =
-      useSortable({ id: contentTabItemMeta.Data?.Id ? contentTabItemMeta.Data?.Id : -1, 
-        animateLayoutChanges : ()=> false, });
+      useSortable({
+        id: contentTabItemMeta.Data?.Id ? contentTabItemMeta.Data?.Id : -1,
+        animateLayoutChanges: () => false,
+      });
 
     const style = {
       transform: CSS.Transform.toString(transform),
@@ -29,6 +31,12 @@ const AnkAPIContentTabItem = React.forwardRef(
       },
     }));
 
+    function OnCloseClick(e: any) {
+      e.stopPropagation();
+      if (contentTabItemMeta.CloseAction && contentTabItemMeta.Data?.Id)
+        contentTabItemMeta.CloseAction(contentTabItemMeta.Data.Id);
+    }
+
     return (
       <li
         ref={setNodeRef}
@@ -38,13 +46,13 @@ const AnkAPIContentTabItem = React.forwardRef(
             : "pageBarItem"
         }
         style={style}
-        onMouseEnter={()=>{
+        onMouseEnter={() => {
           setIsHover(true);
         }}
-        onMouseLeave={()=>{
+        onMouseLeave={() => {
           setIsHover(false);
         }}
-        onMouseDown={() => {
+        onMouseDown={(event) => {
           contentTabItemMeta.Data?.SelectCallbackAction(
             contentTabItemMeta.Data
           );
@@ -52,11 +60,20 @@ const AnkAPIContentTabItem = React.forwardRef(
         {...attributes}
         {...listeners}
       >
+
         {contentTabItemMeta.Data?.ContentName}
+        {contentTabItemMeta.Data?.IsNotSaved ? (
+            ' *'
+        ) : null}
         {contentTabItemMeta.Data?.IsSelected || isHover ? (
-        <IconButton className="pageBarCloseButton">
-                  <HighlightOffIcon />
-        </IconButton>
+          <IconButton
+            onMouseDown={(e) => {
+              OnCloseClick(e);
+            }}
+            className="pageBarCloseButton"
+          >
+            <HighlightOffIcon />
+          </IconButton>
         ) : null}
       </li>
     );
