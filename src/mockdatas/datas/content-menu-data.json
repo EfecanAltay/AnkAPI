@@ -1,0 +1,48 @@
+[
+    {
+        "Name": "TEST 0",
+        "MenuKey": "TEST0",
+        "MenuType": 0,
+        "Children": [
+            {
+                "Name": "TEST 00",
+                "MenuKey": "TEST00",
+                "MenuType": 1
+            }
+        ]
+    },
+    {
+        "Name": "TEST 1",
+        "MenuKey": "TEST1",
+        "MenuType": 0
+    },
+    {
+        "Name": "TEST 2",
+        "MenuKey": "TEST2",
+        "MenuType": 0,
+        "Children": [
+            {
+                "Name": "TEST 20",
+                "MenuKey": "TEST20",
+                "MenuType": 0,
+                "Children": [
+                    {
+                        "Name": "TEST 200",
+                        "MenuKey": "TEST200",
+                        "MenuType": 1
+                    },
+                    {
+                        "Name": "TEST 201",
+                        "MenuKey": "TEST201",
+                        "MenuType": 1
+                    }
+                ]
+            },
+            {
+                "Name": "TEST 21",
+                "MenuKey": "TEST21",
+                "MenuType": 1
+            }
+        ]
+    }
+]

@@ -1,17 +1,25 @@
-import Dashboard from "@/components/dashboard";
-import Login from "./login/page";
+import React from "react";
 import { Constrains } from "@/utils/constraints";
 import { cookies } from 'next/headers'
+import { Suspense } from "react";
+import Loading from "./dashboard/loading";
+
+const Login = React.lazy(() => import("./login/page"));
+const Dashboard = React.lazy(() => import("@/components/dashboard"));
 
 export default function Index() {
   const cookieStore = cookies();
   const auth_token = cookieStore.get(Constrains.AuthToken_Cookie_Name);
   if (auth_token) {
     return (
-      <Dashboard></Dashboard>
+      <Suspense fallback={<Loading />}>
+        <Dashboard />
+      </Suspense>
     );
   }
   return (
-      <Login></Login>
+    <Suspense fallback={<Loading />}>
+        <Login/>
+    </Suspense>
   );
 }

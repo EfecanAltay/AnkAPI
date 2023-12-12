@@ -1,0 +1,14 @@
+
+.menuItem:hover{
+  background-color: var(--mui-palette-selected-menu-item);
+}
+
+@keyframes showChildrenIcon {
+  from {transform:rotate(90deg);}
+  to {transform:rotate(0deg);}
+}
+
+@keyframes hideChildrenIcon {
+  from {transform:rotate(0deg);}
+  to {transform:rotate(90deg);}
+}

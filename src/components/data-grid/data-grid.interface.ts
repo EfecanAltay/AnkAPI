@@ -1,4 +1,5 @@
-import { DataGridTableMode, DataGridTableRule } from "./data-grid-cell.type";
+import { DataGridColHeader, DataGridRow } from "@/common/data-grid/data-grid.classes";
+import { DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
 
 export class IDataGrid {
     public Caption?: string;
@@ -8,6 +9,9 @@ export class IDataGrid {
     public CurrentMode: DataGridTableMode = DataGridTableMode.Read;
     public InsertRowRule: DataGridTableRule = DataGridTableRule.Readonly;
     public InsertColRule: DataGridTableRule = DataGridTableRule.Readonly;
+
+    public ColHeaders: DataGridColHeader[] = [];
+    public Rows: DataGridRow[] = [];
 
     /**
      *

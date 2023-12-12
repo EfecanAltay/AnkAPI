@@ -20,11 +20,12 @@
     --background-end-rgb: 120, 120, 120;
     --mui-palette-primary-main: #1976d2;
     --mui-palette-primary-light: #42a5f5;
-    --mui-palette-primary-dark: #1565c0;
+    --mui-palette-primary-dark: #082e50;
     --mui-palette-primary-contrastText: #0000;
     --app-text-color : #bd1d1d;
-    
+    --mui-primary-dark : #051c33;
     --mui-palette-selected-menu-item: #1976d26c;
+    --mui-palette-selected-menu-item-light: #1976d23b;
   }
 }
 
@@ -36,4 +37,13 @@ body {
       rgb(var(--background-end-rgb))
     )
     rgb(var(--background-start-rgb));
+}
+
+ul {
+  list-style: none
+}
+
+* {
+  margin: 0px;
+  padding: 0px;
 }

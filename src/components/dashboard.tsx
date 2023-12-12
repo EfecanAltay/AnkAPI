@@ -4,22 +4,26 @@ import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import AnkAPIAppBar from "./app-bar/ankapi-appbar";
-import UISnackbars from "./snackbar";
 import { useRef } from "react";
 import { ISnackbar } from "@/common/snackbar.interface";
 import AnkAPISideBar from "./app-bar/ankapi-sidebar";
-import { MenuItemMeta } from "@/common/menu-item-meta";
-import CreateIcon from "@mui/icons-material/Create";
 import UIBaseContentPage from "./content-page";
-import UICreateAPIPage from "./contents/create-api.page";
 import UIEmptyContentPage from "./contents/empty-content.page";
+import { MenuItemData } from "@/common/menu-item";
+import dynamic from "next/dynamic";
+import { DashboardMeta } from "@/common/dashboard-meta";
+import { MockDataProvider } from "@/mockdatas/mockdata-provider";
 
-const drawerWidth = 240;
+const UICreateAPIPage = dynamic(() => import("./contents/create-api.page"), {
+  loading: () => <p>Loading...</p>,
+  ssr: false,
+});
 
-export default function Dashboard() {
+export default function Dashboard(metaData : DashboardMeta) {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
   const [selectedMenuKey, setSelectedMenuKey] = React.useState("CAR");
+  const [menuList, setMenuList] = React.useState(MockDataProvider.GetMainMenuData())//metaData.MainMenuList
   const popupRef = useRef<ISnackbar>(null);
 
   function OnClickMenuButton(): any {
@@ -34,41 +38,45 @@ export default function Dashboard() {
     setSelectedMenuKey(selectedMenuKey);
   }
 
-  const menuList: MenuItemMeta[] = [];
-  menuList.push({
-    Name: "Create API Request",
-    MenuKey: "CAR",
-    IconContent: <CreateIcon />,
-    PageContent: <UICreateAPIPage />,
-  } as MenuItemMeta);
-  menuList.push({ Name: "API Request List", MenuKey: "ARL" } as MenuItemMeta);
-  menuList.push({ Name: "Request Flow", MenuKey: "RF" } as MenuItemMeta);
-
-  function getPage(menuKey: string): any {
-    const contentPage = menuList.find(
-      (x) => x.MenuKey === menuKey
-    )?.PageContent;
-    return contentPage ? contentPage : <UIEmptyContentPage />;
+  function getPage(menuKey: string): MenuItemData | undefined {
+    const contentPage = menuList.find((x) => x.MenuKey === menuKey);
+    return contentPage;
   }
 
+  const currentPage = getPage(selectedMenuKey);
+
+  const currentPageRender = currentPage ? (
+    <UIBaseContentPage ContentHeaderInfo={currentPage.ContentHeaderInfo}>
+      {currentPage.PageContent}
+    </UIBaseContentPage>
+  ) : (
+    <UIEmptyContentPage />
+  );
+
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "row",
+        height: "100%",
+        backgroundColor: "gray",
+        alignItems: "stretch",
+      }}
+    >
       <CssBaseline />
       <AnkAPIAppBar
         Title={""}
-        IsHaveMenu={true}
+        IsHaveMenu={false}
         OnClickMenuButton={OnClickMenuButton}
         IsOpen={open}
       />
-
       <AnkAPISideBar
         OnClickSidebarButton={OnClickSideButton}
-        IsOpen={open}
         MenuListMeta={menuList}
         OnChangedSelectedMenu={OnSelectedMenu}
+        IsOpen={false}
       />
-      <UIBaseContentPage IsSideBarShowing={open}>{getPage(selectedMenuKey)}</UIBaseContentPage>
-      <UISnackbars ref={popupRef}></UISnackbars>
+      {currentPageRender}
     </Box>
   );
 }

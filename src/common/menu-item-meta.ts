@@ -1,9 +1,9 @@
-import { SvgIconComponent } from "@mui/icons-material";
+import { ContentMenuItem } from "./content-meta";
 
 export class MenuItemMeta {
-    public MenuKey: string = "";
-    public Name: string = "";
-    public IconContent: any;
-    public IsSelected: boolean = false;
-    public PageContent: any;
+    public MenuItemData: ContentMenuItem;
+    public OnMouseEnter? = () => {};
+    public OnMouseLeave? = () => {};
+    public OnShowingChanged? = (isShowng: boolean) => {};
+    public OnClick? = (item: ContentMenuItem) => {};
 }

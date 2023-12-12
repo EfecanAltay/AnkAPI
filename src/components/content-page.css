@@ -1,0 +1,37 @@
+.container {
+  height: 100%;
+  width: 100%;
+  background-color: var(--mui-primary-dark);
+  overflow: hidden;
+}
+
+.leftMenu {
+  background-color: var(--mui-palette-primary-dark);
+  float: left;
+  width: 220px;
+  height: 100%;
+}
+
+.content-tab {
+  height:50px;
+  float: left;
+  background-color: #082e50;
+  width: calc(100% - 220px);
+}
+
+.content-header {
+  height: 55px;
+  float: left;
+  z-index: 1;
+  background-color: var(--mui-primary-dark);
+  border-bottom: 1px solid gray;
+  width: calc(100% - 220px);
+}
+
+.content {
+  background-color: var(--mui-primary-dark);
+  padding: 30px;
+  height: 100%;
+  float: left;
+  width: calc(100% - 220px);
+}

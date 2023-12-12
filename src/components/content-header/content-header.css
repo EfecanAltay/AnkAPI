@@ -1,0 +1,21 @@
+.breadclumbs{
+    margin: 13px;
+    color:white;
+}
+
+.inputContentPageName{
+    margin-left: 1;
+    background-color: transparent;
+    flex: auto;
+    color:white;
+    border: 0px;
+    width: fit-content;
+}
+
+.inputContentPageName:disabled{
+    color:white;
+}
+
+.inputContentPageName:focus{
+    border: 1px solid red;
+}
