@@ -34,8 +34,9 @@ export const CustomNode: React.FC<Props> = (props) => {
 
   return (
     <div
-      className={`tree-node ${styles.root}`}
-      style={{ paddingInlineStart: indent, backgroundColor: data?.IsSelected ? "red" : "transparent" }}
+      className={`tree-node ${styles.root} ${data?.Selectable ? styles.selectable:''} ${data?.IsSelected ? styles.selected:''}`}
+      style={{ paddingInlineStart: indent}}
+      onClick={onSelectMenu}
     >
       <div
         className={`${styles.expandIconWrapper} ${
@@ -51,7 +52,7 @@ export const CustomNode: React.FC<Props> = (props) => {
       <div>
         <ContentMenuItemIcon menuType={data?.MenuType} />
       </div>
-      <div onClick={onSelectMenu} className={styles.labelGridItem} style={{cursor: data?.Selectable ? 'pointer' :'default'}}>
+      <div className={styles.labelGridItem}>
         <Typography variant="body2">{props.node.text}</Typography>
       </div>
     </div>
