@@ -6,6 +6,18 @@
   padding-inline-end: 8px;
 }
 
+.root:hover{
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.root.selectable{
+  cursor: pointer;
+}
+
+.root.selected{
+  background-color: rgba(255, 255, 255, 0.445);
+}
+
 .expandIconWrapper {
   align-items: center;
   font-size: 0;

@@ -8,6 +8,8 @@ import { ContentMenuItem, ContentMeta } from "@/common/content-meta";
 import AnkAPIContentTab from "./content-tab/content-tab";
 import { ContentTabItem } from "@/common/content-tab-meta";
 import ContentMenu from "./menu-list/content-menu";
+import { useRef } from "react";
+import { IContentTab } from "./content-tab/content-tab-interface";
 
 function getContentWidth(window: Window, theme: Theme) {
   if (typeof window !== "undefined")
@@ -26,6 +28,8 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   const [sideBarShowing, setSideBarShowing] = React.useState(false);
   const [showLoading, setShowLoading] = React.useState(false);
   const [openedPageList, setOpenedPageList] = React.useState<ContentTabItem[]>([]);
+  
+  const contentTabRef = useRef<IContentTab| undefined>();
 
   let menuList = contentMeta.ContentHeaderInfo?.ContentMenuList ? contentMeta.ContentHeaderInfo?.ContentMenuList : [];
 
@@ -54,11 +58,7 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   }, [theme, sideBarShowing]);
 
   function ShowContentAction(item:ContentMenuItem): void {
-    const p0 = new ContentTabItem();
-    p0.ContentName = item.Name;
-    p0.ContentKey = item.MenuKey;
-    p0.IsSelected = true;
-    openedPageList.push(p0);
+    contentTabRef.current?.ShowOnContentMenuItem(item);
     setOpenedPageList(openedPageList);
   }
 
@@ -68,7 +68,7 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
   </div> : null;
   const contentTab = contentMeta.ContentHeaderInfo?.IsHaveContentTab === true ?
   <div className="content-tab">
-    <AnkAPIContentTab contentTabList={openedPageList} SelectedContentKey={"TEST1"} />
+    <AnkAPIContentTab ref={contentTabRef} contentTabList={openedPageList} />
   </div>: null;
 
   return (

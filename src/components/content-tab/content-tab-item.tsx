@@ -52,7 +52,8 @@ const AnkAPIContentTabItem = React.forwardRef(
         onMouseLeave={() => {
           setIsHover(false);
         }}
-        onMouseDown={(event) => {
+        onMouseDown={(e) => {
+          e.stopPropagation();
           contentTabItemMeta.Data?.SelectCallbackAction(
             contentTabItemMeta.Data
           );
@@ -68,6 +69,7 @@ const AnkAPIContentTabItem = React.forwardRef(
         {contentTabItemMeta.Data?.IsSelected || isHover ? (
           <IconButton
             onMouseDown={(e) => {
+              e.stopPropagation();
               OnCloseClick(e);
             }}
             className="pageBarCloseButton"

@@ -1,6 +1,7 @@
 
 .menuItem:hover{
   background-color: var(--mui-palette-selected-menu-item);
+  
 }
 
 @keyframes showChildrenIcon {

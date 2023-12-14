@@ -15,16 +15,42 @@ import {
   defaultAnimateLayoutChanges,
   SortableContext,
 } from "@dnd-kit/sortable";
-import { useReducer } from "react";
+import { forwardRef, useImperativeHandle, useReducer, useState } from "react";
+import { IContentTab } from "./content-tab-interface";
+import { ContentMenuItem } from "@/common/content-meta";
 
-export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
+const ContentTab = forwardRef<IContentTab | undefined,ContentTabMeta>((props,ref) => AnkAPIContentTab(props,ref));
+ContentTab.displayName = 'ContantTab';
+export default ContentTab;
+
+function AnkAPIContentTab(contentTabMeta: ContentTabMeta, ref: React.ForwardedRef<IContentTab | undefined>) {
   const theme = useTheme();
-  const [selectedContentKey, setSelectedContentKey] = React.useState("");
+  const [selectedContentKey, setSelectedContentKey] = useState("");
   const [, forceUpdate] = useReducer(x => x + 1, 0);
-  const [items, setItems] = React.useState<ContentTabItem[]>(prepareTabList(contentTabMeta.contentTabList));
+  const [items, setItems] = useState<ContentTabItem[]>(prepareTabList(contentTabMeta.contentTabList));
 
-
+  useImperativeHandle(ref, () => (
+    {
+      ShowOnContentMenuItem(item) {
+        const f_contentTab = findContentMenu(item.MenuKey);
+        if(f_contentTab)
+        {
+          selectContentPage(f_contentTab);
+          forceUpdate();
+        }
+        else
+        {
+          addNewTab(item);
+        } 
+      }
+    }
+  ));
+  
   //** Opened Content Pages **/
+  
+  function findContentMenu(ContentKey : string) {
+    return items.find(x=> x.ContentKey === ContentKey );
+  }
   
   function prepareTabList(items : ContentTabItem[] | undefined) {
     if(items && items.length > 0){
@@ -37,37 +63,57 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
     return [];   
   }
 
-  function AddTab(item?: ContentTabItem){
+  function addNewTab(menuItem?: ContentMenuItem){
     let tabItem = new ContentTabItem();
-    tabItem.Id = crypto.randomUUID();
-    
-    if(items.length > 0 )
+    tabItem.SelectCallbackAction = selectContentPage;
+    tabItem.IsSelected = true;
+
+    if(menuItem)
     {
-      let counter = 0;
-      do
-      {
-        let f_item = items.find(x=> x.ContentName === `New Page ${counter > 0 ? counter : ''}`);
-        if(f_item)
-        {          
-          counter = counter + 1;
-        }
-        else
-          break;
-      }while(true);
-      tabItem.ContentName = `New Page ${counter}`
+      tabItem.ContentKey = menuItem.MenuKey;
+      tabItem.ContentName = menuItem.Name;
+      tabItem.IsNotSaved = false;
     }
     else
-      tabItem.ContentName = "New Page "
-
+    {
+      /* Creating New Tab */
+      if(items.length > 0 )
+      {
+        let counter = 0;
+        do
+        {
+          let f_item = items.find(x=> x.ContentName === `New Page${counter > 0 ? ' ' + counter : ''}`);
+          if(f_item)
+          {          
+            counter = counter + 1;
+          }
+          else
+            break;
+        }while(true);
+        tabItem.ContentName = `New Page${counter > 0 ? ' ' + counter : ''}`
+      }
+      else
+        tabItem.ContentName = "New Page"
+     
+      tabItem.ContentKey = tabItem.ContentName.replace(/\s/g, '').trim().toUpperCase();
+    }
     
     items.push(tabItem);
-    setItems(items);
+
+    setItems(prepareTabList(items));
+    selectContentPage(tabItem);
     forceUpdate();
   }
 
   function RemoveTab(id: UniqueIdentifier){
-    setItems(items.filter(i=> i.Id !== id));
-    forceUpdate();
+    const r_item = items.find(x => x.Id === id && x.IsSelected);
+    const n_items = items.filter(i=> i.Id !== id);
+    setItems(n_items);
+    if(r_item && n_items.length > 0)
+    {
+      n_items[n_items.length-1].IsSelected = true;
+    }
+    //forceUpdate();
   }
 
   //**************************/
@@ -78,7 +124,7 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
     contentTablist ? contentTablist.map((ct) => ct.Id) : [];
   const getIndex = (item?: ContentTabItem) =>
     items && item ? items.indexOf(item) : -1;
-  const getPosition = (item: ContentTabItem) => getIndex(item) + 1;
+
   const getItem = (id: UniqueIdentifier) =>
     items?.find((item) => item.Id === id);
 
@@ -90,7 +136,7 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
   function selectContentPage(contentTabItem: ContentTabItem) {
     items.forEach((contentPage) => {
       contentPage.IsSelected = contentPage.ContentKey === contentTabItem.ContentKey;
-      contentPage.Referance?.current?.UpdateAction();
+      //contentPage.Referance?.current?.UpdateAction();
     });
   }
 
@@ -98,7 +144,6 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
     activeId: UniqueIdentifier,
     overId: UniqueIdentifier
   ) {
-    //console.log(getItemIndexList(items));
     const sortedIndexList = arrayMove(
       items ? getItemIndexList(items) : [],
       getIndexById(activeId),
@@ -168,7 +213,7 @@ export default function AnkAPIContentTab(contentTabMeta: ContentTabMeta) {
             </SortableContext>
             <DragOverlay dropAnimation={null}></DragOverlay>
           </DndContext>
-          <IconButton onClick={()=>{ AddTab()}} aria-label="fingerprint">
+          <IconButton onClick={()=>{ addNewTab()}} aria-label="fingerprint">
             <AddCircleOutlineIcon />
           </IconButton>
         </div>
