@@ -12,6 +12,7 @@ type Props = {
   isOpen: boolean;
   onToggle: (id: NodeModel["id"]) => void;
   onSelected: (id: NodeModel["id"]) => void;
+  onShowed: (id: NodeModel["id"]) => void;
 };
 
 export const CustomNode: React.FC<Props> = (props) => {
@@ -25,8 +26,10 @@ export const CustomNode: React.FC<Props> = (props) => {
 
   const onSelectMenu = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if(data?.Selectable)
+    if(data?.Selectable){
       props.onSelected(props.node.id);
+      props.onShowed(props.node.id);
+    }
   };
 
   return (

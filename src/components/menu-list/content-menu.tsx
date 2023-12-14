@@ -136,6 +136,21 @@ export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
         treeData[i] = data ;
         setTreeData(treeData);
         forceUpdate();
+      }
+      else if (data.data){
+        data.data.IsSelected = false;
+      }
+    }
+  }
+
+  function onShowedMenu(id: string | number) {
+    for (let i = 0; i < treeData.length ; i++) {
+      let data = treeData[i];
+      if (data.id === id && data.data){
+        data.data.IsSelected = true;
+        treeData[i] = data ;
+        setTreeData(treeData);
+        forceUpdate();
         contentMenuList.ShowContentAction?.(data.data);
       }
       else if (data.data){
@@ -200,6 +215,7 @@ export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
                         depth={depth}
                         isOpen={isOpen}
                         onSelected={onSelectedMenuItem}
+                        onShowed={onShowedMenu}
                         onToggle={onToggle}
                       />
                     )}
