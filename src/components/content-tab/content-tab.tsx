@@ -1,10 +1,8 @@
 import * as React from "react";
 import { Box, IconButton, ThemeProvider, createTheme, useTheme } from "@mui/material";
 import {
-  ContentTabItem,
-  ContentTabItemMeta,
   ContentTabMeta,
-} from "@/common/content-tab-meta";
+} from "@/common/meta/content-tab-meta";
 import "./content-tab.css";
 import AnkAPIContentTabItem from "./content-tab-item";
 import { DndContext, DragOverlay, UniqueIdentifier } from "@dnd-kit/core";
@@ -17,7 +15,8 @@ import {
 } from "@dnd-kit/sortable";
 import { forwardRef, useImperativeHandle, useReducer, useState } from "react";
 import { IContentTab } from "./content-tab-interface";
-import { ContentMenuItem } from "@/common/content-meta";
+import { ContentMenuItem } from "@/common/data/content-menu/content-menu.data";
+import { ContentTabItem } from "@/common/data/content-tab/content-tab-item.data";
 
 const ContentTab = forwardRef<IContentTab | undefined,ContentTabMeta>((props,ref) => AnkAPIContentTab(props,ref));
 ContentTab.displayName = 'ContantTab';
@@ -207,7 +206,7 @@ function AnkAPIContentTab(contentTabMeta: ContentTabMeta, ref: React.ForwardedRe
                   UpdateAction={pageBar.UpdateAction}
                   key={index + 1}
                   Data={pageBar}
-                  CloseAction={(id)=>RemoveTab(id)}
+                  CloseAction={(id : any)=>RemoveTab(id)}
                 />
               ))}
             </SortableContext>

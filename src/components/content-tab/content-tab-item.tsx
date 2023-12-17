@@ -1,7 +1,7 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import { IconButton, useTheme } from "@mui/material";
-import { ContentTabItemMeta } from "@/common/content-tab-meta";
+import { ContentTabItemMeta } from "@/common/meta/content-tab-meta";
 import "./content-tab.css";
 import { useImperativeHandle } from "react";
 import { useSortable } from "@dnd-kit/sortable";

@@ -22,7 +22,7 @@ import Paper from "@mui/material/Paper";
 import DataGrid from "../data-grid/data-grid.component";
 import { DataGridCellType, DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
 import { DataGridCell, DataGridColHeader, DataGridRow } from "@/common/data-grid/data-grid.classes";
-import { CreateAPIPageData } from "@/common/data/create-api-page.data";
+import { CreateAPIPageData } from "@/common/data/content-pages/create-api-page.data";
 
 //#region TabPanel
 

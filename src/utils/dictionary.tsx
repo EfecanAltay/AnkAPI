@@ -8,7 +8,7 @@ export class KeyValue<K,V>{
 }
 
 export class Dictionary<K,V>{
-    
+
     get(key: K) : V | undefined {
         return this._items.find(i=> i.key === i.key)?.val;
     }

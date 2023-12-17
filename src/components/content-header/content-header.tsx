@@ -1,4 +1,4 @@
-import { ContentHeaderMeta } from "@/common/content-header-meta";
+import { ContentHeaderMeta } from "@/common/meta/content-header-meta";
 import { useTheme } from "@emotion/react";
 import { Breadcrumbs, Typography, Link, InputBase } from "@mui/material";
 import { useReducer, useState } from "react";

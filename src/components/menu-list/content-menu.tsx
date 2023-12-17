@@ -14,7 +14,7 @@ import {
 import { ContentMenuListMeta } from "@/common/menu-list";
 import "./menu-list.css";
 import AnkAPIMenuItem from "./menu-item/menu-item";
-import { ContentMenuItem, ContentMenuItemType } from "@/common/content-meta";
+import { ContentMenuItem, ContentMenuItemType } from "@/common/data/content-menu/content-menu.data";
 import {
   DndProvider,
   MultiBackend,

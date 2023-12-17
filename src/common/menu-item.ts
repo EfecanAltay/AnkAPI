@@ -1,4 +1,4 @@
-import { ContentPageContainerInfo } from "./content-meta";
+import { ContentPageContainerInfo } from "@/common/data/content-page-container.data";
 
 export class MenuItemData {
     public selecteMenuKey: string = "";

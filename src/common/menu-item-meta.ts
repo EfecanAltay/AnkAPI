@@ -1,4 +1,4 @@
-import { ContentMenuItem } from "./content-meta";
+import { ContentMenuItem } from "./content-container.meta";
 
 export class MenuItemMeta {
     public MenuItemData: ContentMenuItem;

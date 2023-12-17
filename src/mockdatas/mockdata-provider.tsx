@@ -3,7 +3,7 @@ import mainMenuDataList from './datas/main-menu-data.json';
 import contentMenuDataList from './datas/content-menu-data.json';
 
 import UICreateAPIPage from '@/components/contents/create-api.page';
-import { ContentMenuItem } from '@/common/content-meta';
+import { ContentMenuItem } from '@/common/data/content-menu/content-menu.data';
 
 export class MockDataProvider{
     public static GetMainMenuData(){

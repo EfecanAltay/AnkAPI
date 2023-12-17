@@ -4,12 +4,13 @@ import "../components.css";
 import "./content-page.container.css";
 import * as React from "react";
 import { Backdrop, Box, CircularProgress, Theme, useTheme } from "@mui/material";
-import { ContentMenuItem, ContentPageContainerMeta } from "@/common/content-meta";
+import { ContentPageContainerMeta } from "@/common/meta/content-container.meta";
 import AnkAPIContentTab from "../content-tab/content-tab";
-import { ContentTabItem } from "@/common/content-tab-meta";
+import { ContentTabItem } from "@/common/meta/content-tab-meta";
 import ContentMenu from "../menu-list/content-menu";
 import { useRef } from "react";
 import { IContentTab } from "../content-tab/content-tab-interface";
+import { ContentMenuItem } from "@/common/data/content-menu/content-menu.data";
 
 function getContentWidth(window: Window, theme: Theme) {
   if (typeof window !== "undefined")

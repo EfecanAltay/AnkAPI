@@ -1,4 +1,4 @@
-import { ContentMenuItem } from "./content-meta";
+import { ContentMenuItem } from "@/common/data/content-menu/content-menu.data";
 
 export class ContentMenuListMeta {
     public ContentMenuList: ContentMenuItem[] = [];

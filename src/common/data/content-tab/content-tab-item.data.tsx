@@ -1,16 +1,4 @@
 import { UniqueIdentifier } from "@dnd-kit/core";
-import React from "react";
-
-export class ContentTabMeta {
-    public SelectedContentKey?: string = "";
-    public contentTabList?: ContentTabItem[];
-}
-
-export class ContentTabItemMeta{
-    public UpdateAction? = ()=>{};
-    public CloseAction? = (id:UniqueIdentifier)=>{};
-    public Data? : ContentTabItem;
-}
 
 export class ContentTabItem{
     public Id: UniqueIdentifier = 0;

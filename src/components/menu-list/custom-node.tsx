@@ -4,7 +4,7 @@ import ArrowRightIcon from "@mui/icons-material/ArrowRight";
 import { NodeModel } from "@minoru/react-dnd-treeview";
 import { ContentMenuItemIcon } from "./content-menu-item-icon";
 import styles from "./custom-node.module.css";
-import { ContentMenuItem } from "@/common/content-meta";
+import { ContentMenuItem } from "@/common/data/content-menu/content-menu.data";
 
 type Props = {
   node: NodeModel<ContentMenuItem>;

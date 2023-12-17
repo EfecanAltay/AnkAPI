@@ -11,7 +11,7 @@ import ContentPageContainer from "./container/content-page.container";
 import UIEmptyContentPage from "./contents/empty-content.page";
 import { MenuItemData } from "@/common/menu-item";
 import dynamic from "next/dynamic";
-import { DashboardMeta } from "@/common/dashboard-meta";
+import { DashboardMeta } from "@/common/meta/dashboard-meta";
 import { MockDataProvider } from "@/mockdatas/mockdata-provider";
 
 const UICreateAPIPage = dynamic(() => import("./contents/create-api.page"), {
