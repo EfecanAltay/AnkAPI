@@ -1,6 +1,6 @@
 import { ContentPageContainerInfo } from "@/common/data/content-page-container.data";
 
-export class MenuItemData {
+export class SidebarItemData {
     public selecteMenuKey: string = "";
     public MenuKey: string = "";
     public Name: string = "";
@@ -9,8 +9,8 @@ export class MenuItemData {
     public PageContent: any;
     public ContentPageContainerInfo : ContentPageContainerInfo = new ContentPageContainerInfo();
     
-    public Children : MenuItemData[] | null = null;
-    public Parent : MenuItemData | null = null;
+    public Children : SidebarItemData[] | null = null;
+    public Parent : SidebarItemData | null = null;
     public ParentIndex : number = 0;
 
     /**

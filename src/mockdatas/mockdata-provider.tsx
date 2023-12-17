@@ -1,4 +1,4 @@
-import { MenuItemData } from '@/common/menu-item';
+import { MenuItemData } from '@/common/data/sidebar-menu/sidebar-item.data';
 import mainMenuDataList from './datas/main-menu-data.json';
 import contentMenuDataList from './datas/content-menu-data.json';
 

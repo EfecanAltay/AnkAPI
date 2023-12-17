@@ -13,8 +13,8 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import { SidebarMeta } from "@/common/sidebar-meta";
-import { MenuItemData } from "@/common/menu-item";
+import { SidebarMeta } from "@/common/meta/sidebar-meta";
+import { SidebarItemData } from "@/common/data/sidebar-menu/sidebar-item.data";
 import "./ankapi-sidebar.css";
 
 const FireNav = styled(List)<{ component?: React.ElementType }>({
@@ -39,9 +39,9 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
   const theme = useTheme();
   const [selecteMenuKey, setSelecteMenuKey] = React.useState("");
 
-  function onClickMenuItem(menuItemMeta: MenuItemData) {
-    setSelecteMenuKey(menuItemMeta.MenuKey);
-    sidebarMeta.OnChangedSelectedMenu?.(menuItemMeta.MenuKey);
+  function onClickMenuItem(sidebarItemMeta: SidebarItemData) {
+    setSelecteMenuKey(sidebarItemMeta.MenuKey);
+    sidebarMeta.OnChangedSelectedMenu?.(sidebarItemMeta.MenuKey);
   }
 
   return (
@@ -84,11 +84,11 @@ export default function AnkAPISideBar(sidebarMeta: SidebarMeta) {
 }
 
 function renderMenuList(
-  menuListMeta: MenuItemData[] | undefined,
+  menuListMeta: SidebarItemData[] | undefined,
   selecteMenuKey: string,
   callbackItem: any
 ) {
-  function renderIcon(menuItem: MenuItemData) {
+  function renderIcon(menuItem: SidebarItemData) {
     if (menuItem?.IconContent) {
       return (
         <ListItemIcon
@@ -105,7 +105,7 @@ function renderMenuList(
   }
   return (
     <List>
-      {menuListMeta?.map((menuItem: MenuItemData) => (
+      {menuListMeta?.map((menuItem: SidebarItemData) => (
         <ListItem
           key={menuItem.MenuKey}
           disablePadding

@@ -3,7 +3,7 @@
 import "./style.css";
 
 import { login } from "./page_services";
-import { UserLoginData } from "@/common/login-user-data";
+import { UserLoginData } from "@/common/login-user.data";
 import { ShowError } from "../app-actions/popup-actions";
 import SnackbarContextData from "@/common/contexts/snackbar.context";
 

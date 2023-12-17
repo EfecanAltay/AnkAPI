@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
-import { AppBarMeta } from '@/common/page-meta';
+import { AppBarMeta } from '@/common/meta/app-bar-meta';
 import { Avatar, ThemeProvider, createTheme, styled } from '@mui/material';
 
 interface AppBarProps extends MuiAppBarProps {

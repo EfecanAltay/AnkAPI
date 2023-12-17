@@ -9,7 +9,7 @@ import { ISnackbar } from "@/common/snackbar.interface";
 import AnkAPISideBar from "./app-bar/ankapi-sidebar";
 import ContentPageContainer from "./container/content-page.container";
 import UIEmptyContentPage from "./contents/empty-content.page";
-import { MenuItemData } from "@/common/menu-item";
+import { MenuItemData } from "@/common/data/sidebar-menu/sidebar-item.data";
 import dynamic from "next/dynamic";
 import { DashboardMeta } from "@/common/meta/dashboard-meta";
 import { MockDataProvider } from "@/mockdatas/mockdata-provider";

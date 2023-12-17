@@ -1,7 +1,7 @@
 "use server";
 
 import { Constrains } from "@/utils/constraints";
-import { UserLoginData } from "@/common/login-user-data";
+import { UserLoginData } from "@/common/login-user.data";
 import { cookies } from "next/headers";
 
 export async function login(userLoginData : UserLoginData) {

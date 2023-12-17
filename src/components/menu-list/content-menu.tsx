@@ -11,12 +11,12 @@ import {
   styled,
   useTheme,
 } from "@mui/material";
-import { ContentMenuListMeta } from "@/common/menu-list";
+import { ContentMenuListMeta } from "@/common/meta/content-menu-list.meta";
 import "./menu-list.css";
-import AnkAPIMenuItem from "./menu-item/menu-item";
 import { ContentMenuItem, ContentMenuItemType } from "@/common/data/content-menu/content-menu.data";
 import {
   DndProvider,
+  DropOptions,
   MultiBackend,
   NodeModel,
   Tree,
@@ -25,6 +25,7 @@ import {
 import { useReducer, useState } from "react";
 import { CustomNode } from "./custom-node";
 import menuStyle from "./content-menu.module.css";
+import { tree } from "next/dist/build/templates/app-page";
 
 const FireNav = styled(List)<{ component?: React.ElementType }>({
   "&": {
@@ -124,9 +125,31 @@ export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
     setTreeData(newTreeData);
   };
 
-  const canDrop = (newTreeData: NodeModel<ContentMenuItem>) => {
-    return newTreeData.droppable;
+  const canDrop = (treeData: NodeModel<ContentMenuItem>[],options: DropOptions<ContentMenuItem>): boolean | void =>  {
+    
+    if(options.dropTarget && options.dragSourceId !== options.dropTargetId)
+    {
+      if(options.dropTarget.parent !== 0 && !dropValidation(options.dragSourceId,options.dropTarget,treeData))
+        return false; 
+      
+      return options.dropTarget.droppable;
+    }
+    else return false;
   };
+
+  function dropValidation(dragId : any, options: NodeModel<ContentMenuItem>, treeData: NodeModel<ContentMenuItem>[]){
+    if(options.parent !== 0)
+    {
+      if(options.parent === dragId)
+        return false;
+      const _parent = treeData.find(i=> i.id === options.parent);
+      if(_parent)
+        return dropValidation(dragId, _parent ,treeData);
+      else 
+        return false;
+    }
+    return true;
+  }  
 
   function onSelectedMenuItem(id: string | number) {
     for (let i = 0; i < treeData.length ; i++) {
@@ -248,53 +271,4 @@ export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
       console.log(over);
     }
   }
-}
-
-function renderMenuItem(
-  menuItemData: ContentMenuItem,
-  callbackClickItem: (item: ContentMenuItem) => void
-) {
-  const ref = React.createRef<HTMLDivElement>();
-
-  function OnMouseEnter() {
-    ref.current?.style.setProperty(
-      "background-color",
-      "var(--mui-palette-selected-menu-item-light)"
-    );
-  }
-
-  function onMouseLeave() {
-    ref.current?.style.setProperty("background-color", "transparent");
-  }
-
-  function onShowingChanged(isShowing: boolean) {
-    ref.current?.style.setProperty(
-      "animation",
-      `${isShowing ? "showChildrenList" : "hideChildrenList"} 0.4s forwards`
-    );
-  }
-
-  return (
-    <div>
-      <AnkAPIMenuItem
-        key={menuItemData.MenuKey}
-        OnMouseEnter={OnMouseEnter}
-        OnMouseLeave={onMouseLeave}
-        OnShowingChanged={onShowingChanged}
-        OnClick={callbackClickItem}
-        MenuItemData={menuItemData}
-      />
-      {menuItemData?.Children && menuItemData?.Children?.length > 0 && (
-        <div
-          id={menuItemData.MenuKey + "_children"}
-          ref={ref}
-          style={{ marginLeft: `25px` }}
-        >
-          {menuItemData?.Children?.map((child) =>
-            renderMenuItem(child, callbackClickItem)
-          )}
-        </div>
-      )}
-    </div>
-  );
 }
