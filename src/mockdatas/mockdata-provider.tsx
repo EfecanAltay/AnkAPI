@@ -13,7 +13,7 @@ export class MockDataProvider{
             const e = (element as MenuItemData)
             if(index === 0){
                 e.PageContent = <UICreateAPIPage />;
-                e.ContentHeaderInfo.ContentMenuList = MockDataProvider.GetContentMenuData();
+                e.ContentPageContainerInfo.ContentMenuList = MockDataProvider.GetContentMenuData();
             }
              
             resultList.push(e);

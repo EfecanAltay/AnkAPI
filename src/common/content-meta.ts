@@ -1,14 +1,16 @@
+import React from "react";
 import { ContentHeaderMeta } from "./content-header-meta";
 import { ContentTabItem } from "./content-tab-meta";
+import { ContentData } from "./data/content.data";
 
-export class ContentMeta {
-    public children?: any ;
+export class ContentPageContainerMeta {
+    public children?: React.JSX.Element ;
     public contentHeader?: ContentHeaderMeta;
-    public ContentHeaderInfo? : ContentHeaderInfo;
+    public ContentPageContainerInfo? : ContentPageContainerInfo;
     public ContentRender?: ()=>any;
 }
 
-export class ContentHeaderInfo{
+export class ContentPageContainerInfo{
     public IsHaveContentMenu: boolean = false;
     public IsHaveContentTab: boolean = false;
     public ContentMenuList? : ContentMenuItem[];
@@ -21,10 +23,10 @@ export class ContentMenuItem {
     public IconContent: any;
     public MenuType: ContentMenuItemType = ContentMenuItemType.Content;
     public PageContent: any;
-    public ContentHeaderInfo : ContentHeaderInfo = new ContentHeaderInfo();
     public Children : ContentMenuItem[] = [];
     public haveChildren : boolean = false; 
-    
+    public ContentData : ContentData = new ContentData();
+
     public Selectable: boolean = false;
     public IsSelected: boolean = false;
 }

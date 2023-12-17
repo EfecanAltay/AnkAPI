@@ -5,7 +5,7 @@ import { useReducer, useState } from "react";
 import "./content-header.css";
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
-export function ContentHeader(contentMeta: ContentHeaderMeta) {
+export function ContentHeader(chm: ContentHeaderMeta) {
     const theme = useTheme();
     const [, forceUpdate] = useReducer(x => x + 1, 0);
     const [contentSize, setContentSize] = useState([0, 0]);

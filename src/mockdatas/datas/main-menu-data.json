@@ -3,7 +3,7 @@
         "Name": "API Request",
         "MenuKey": "CAR",
         "PageContent": "<UICreateAPIPage />",
-        "ContentHeaderInfo": {
+        "ContentPageContainerInfo": {
             "IsHaveContentMenu": true,
             "IsHaveContentTab": true
         }

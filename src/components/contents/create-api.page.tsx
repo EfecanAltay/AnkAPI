@@ -22,6 +22,7 @@ import Paper from "@mui/material/Paper";
 import DataGrid from "../data-grid/data-grid.component";
 import { DataGridCellType, DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
 import { DataGridCell, DataGridColHeader, DataGridRow } from "@/common/data-grid/data-grid.classes";
+import { CreateAPIPageData } from "@/common/data/create-api-page.data";
 
 //#region TabPanel
 
@@ -119,10 +120,11 @@ let apiReqStaticHeaderRows: DataGridRow[] = [
 ];
 //#endregion
 
-export default function UICreateAPIPage() {
+export default function UICreateAPIPage(props:{data?: CreateAPIPageData}) {
   const theme = useTheme();
   const [value, setValue] = React.useState(0);
   const [apiType, setAPIType] = React.useState("0");
+  const [pageData, setPageData] = React.useState(props.data);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -208,6 +210,7 @@ export default function UICreateAPIPage() {
           </CustomTabPanel>
         </Grid>
       </Grid>
+      <TextField value={pageData}></TextField>
     </Box>
   );
 }

@@ -7,7 +7,7 @@ import AnkAPIAppBar from "./app-bar/ankapi-appbar";
 import { useRef } from "react";
 import { ISnackbar } from "@/common/snackbar.interface";
 import AnkAPISideBar from "./app-bar/ankapi-sidebar";
-import UIBaseContentPage from "./content-page";
+import ContentPageContainer from "./container/content-page.container";
 import UIEmptyContentPage from "./contents/empty-content.page";
 import { MenuItemData } from "@/common/menu-item";
 import dynamic from "next/dynamic";
@@ -46,9 +46,9 @@ export default function Dashboard(metaData : DashboardMeta) {
   const currentPage = getPage(selectedMenuKey);
 
   const currentPageRender = currentPage ? (
-    <UIBaseContentPage ContentHeaderInfo={currentPage.ContentHeaderInfo}>
+    <ContentPageContainer ContentPageContainerInfo={currentPage.ContentPageContainerInfo}>
       {currentPage.PageContent}
-    </UIBaseContentPage>
+    </ContentPageContainer>
   ) : (
     <UIEmptyContentPage />
   );

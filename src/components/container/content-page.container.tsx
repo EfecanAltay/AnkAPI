@@ -1,15 +1,15 @@
 "use client";
 
-import "./components.css";
-import "./content-page.css";
+import "../components.css";
+import "./content-page.container.css";
 import * as React from "react";
 import { Backdrop, Box, CircularProgress, Theme, useTheme } from "@mui/material";
-import { ContentMenuItem, ContentMeta } from "@/common/content-meta";
-import AnkAPIContentTab from "./content-tab/content-tab";
+import { ContentMenuItem, ContentPageContainerMeta } from "@/common/content-meta";
+import AnkAPIContentTab from "../content-tab/content-tab";
 import { ContentTabItem } from "@/common/content-tab-meta";
-import ContentMenu from "./menu-list/content-menu";
+import ContentMenu from "../menu-list/content-menu";
 import { useRef } from "react";
-import { IContentTab } from "./content-tab/content-tab-interface";
+import { IContentTab } from "../content-tab/content-tab-interface";
 
 function getContentWidth(window: Window, theme: Theme) {
   if (typeof window !== "undefined")
@@ -22,17 +22,18 @@ function getContentHeight(window: Window, theme: Theme) {
   else return 80;
 }
 
-export default function UIBaseContentPage(contentMeta: ContentMeta) {
+export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
   const theme = useTheme();
   const [contentSize, setContentSize] = React.useState([0, 0]);
   const [sideBarShowing, setSideBarShowing] = React.useState(false);
   const [showLoading, setShowLoading] = React.useState(false);
   const [openedPageList, setOpenedPageList] = React.useState<ContentTabItem[]>([]);
+  const [currentData, setCurrentData] = React.useState<any>();
   
   const contentTabRef = useRef<IContentTab| undefined>();
 
-  let menuList = contentMeta.ContentHeaderInfo?.ContentMenuList ? contentMeta.ContentHeaderInfo?.ContentMenuList : [];
-
+  let menuList = cpcm.ContentPageContainerInfo?.ContentMenuList ? cpcm.ContentPageContainerInfo?.ContentMenuList : [];
+  
   React.useEffect(() => {
     function sidebarOpenAction(customEvent: any) {
       setSideBarShowing(customEvent.detail);
@@ -59,17 +60,26 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
 
   function ShowContentAction(item:ContentMenuItem): void {
     contentTabRef.current?.ShowOnContentMenuItem(item);
+    setCurrentData(item.ContentData);
+    alert(`showing Data :${item.ContentData}`);
     setOpenedPageList(openedPageList);
   }
 
-  const contentMenu = contentMeta.ContentHeaderInfo?.IsHaveContentMenu === true ?
+  const contentMenu = cpcm.ContentPageContainerInfo?.IsHaveContentMenu === true ?
   <div className="leftMenu">
     <ContentMenu key={"leftMenu"} ContentMenuList={menuList} ShowContentAction={ShowContentAction} ></ContentMenu>
   </div> : null;
-  const contentTab = contentMeta.ContentHeaderInfo?.IsHaveContentTab === true ?
+  const contentTab = cpcm.ContentPageContainerInfo?.IsHaveContentTab === true ?
   <div className="content-tab">
     <AnkAPIContentTab ref={contentTabRef} contentTabList={openedPageList} />
   </div>: null;
+
+  let childElement = <div>Empty</div>
+  
+  if(cpcm?.children)
+    childElement = React.cloneElement(cpcm.children, {
+        data : currentData,
+    });
 
   return (
     <Box
@@ -84,7 +94,7 @@ export default function UIBaseContentPage(contentMeta: ContentMeta) {
         {contentMenu}
         {contentTab}
         <div className="content">
-        {contentMeta?.children}     
+          { childElement}
         </div>  
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
