@@ -9,7 +9,7 @@ import { ISnackbar } from "@/common/snackbar.interface";
 import AnkAPISideBar from "./app-bar/ankapi-sidebar";
 import ContentPageContainer from "./container/content-page.container";
 import UIEmptyContentPage from "./contents/empty-content.page";
-import { MenuItemData } from "@/common/data/sidebar-menu/sidebar-item.data";
+import { SidebarItemData } from "@/common/data/sidebar-menu/sidebar-item.data";
 import dynamic from "next/dynamic";
 import { DashboardMeta } from "@/common/meta/dashboard-meta";
 import { MockDataProvider } from "@/mockdatas/mockdata-provider";
@@ -38,7 +38,7 @@ export default function Dashboard(metaData : DashboardMeta) {
     setSelectedMenuKey(selectedMenuKey);
   }
 
-  function getPage(menuKey: string): MenuItemData | undefined {
+  function getPage(menuKey: string): SidebarItemData | undefined {
     const contentPage = menuList.find((x) => x.MenuKey === menuKey);
     return contentPage;
   }

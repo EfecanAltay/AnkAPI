@@ -22,7 +22,9 @@ import Paper from "@mui/material/Paper";
 import DataGrid from "../data-grid/data-grid.component";
 import { DataGridCellType, DataGridTableMode, DataGridTableRule } from "../../common/data-grid/data-grid-cell.type";
 import { DataGridCell, DataGridColHeader, DataGridRow } from "@/common/data-grid/data-grid.classes";
-import { CreateAPIPageData } from "@/common/data/content-pages/create-api-page.data";
+import { APITemplate, CreateAPIPageData } from "@/common/data/content-pages/create-api-page.data";
+import { useImperativeHandle, useReducer } from "react";
+import { IContentPage } from "@/common/content-page.interface";
 
 //#region TabPanel
 
@@ -120,11 +122,16 @@ let apiReqStaticHeaderRows: DataGridRow[] = [
 ];
 //#endregion
 
-export default function UICreateAPIPage(props:{data?: CreateAPIPageData}) {
+const UICreateAPIPage = React.forwardRef<IContentPage>(
+  (props: {data? : CreateAPIPageData}, ref) => {
   const theme = useTheme();
+  const [update, forceUpdate] = useReducer(x => x + 1, 0);
+  const [updateState, setUpdateState] = React.useState(0);
   const [value, setValue] = React.useState(0);
   const [apiType, setAPIType] = React.useState("0");
-  const [pageData, setPageData] = React.useState(props.data);
+  const [pageData, setPageData] = React.useState<CreateAPIPageData>(props?.data ? props.data : new CreateAPIPageData());
+  
+  const [sendingURL, setSendingURL] = React.useState(props.data?.APITemplate.SendingURL);
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -133,6 +140,20 @@ export default function UICreateAPIPage(props:{data?: CreateAPIPageData}) {
   const apiTypeChange = (event: SelectChangeEvent) => {
     setAPIType(event.target.value);
   };
+
+  function loadData(){
+    setSendingURL(props?.data?.APITemplate.SendingURL);
+  }
+
+  useImperativeHandle(ref, () => ({
+    Show(){
+      loadData();
+    },
+    Close(){
+
+    }
+  }));
+
 
   return (
     <Box
@@ -163,6 +184,8 @@ export default function UICreateAPIPage(props:{data?: CreateAPIPageData}) {
             fullWidth
             id="outlined-required"
             label="API Request URL"
+            value={sendingURL}
+            onChange={(event: object)=>{ setSendingURL(event.target.value)}}
             placeholder="https://<api_url>"
             focused
             style={{ marginTop: "10px" }}
@@ -210,7 +233,11 @@ export default function UICreateAPIPage(props:{data?: CreateAPIPageData}) {
           </CustomTabPanel>
         </Grid>
       </Grid>
-      <TextField value={pageData}></TextField>
     </Box>
+  );  
+    }
   );
-}
+
+UICreateAPIPage.displayName = "UICreateAPIPage";
+
+export default UICreateAPIPage;

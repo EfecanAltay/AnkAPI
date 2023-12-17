@@ -1,12 +1,12 @@
 import * as React from "react";
 import dynamic from "next/dynamic";
 import { IconButton, useTheme } from "@mui/material";
-import { ContentTabItemMeta } from "@/common/meta/content-tab-meta";
 import "./content-tab.css";
 import { useImperativeHandle } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { ContentTabItemMeta } from "@/common/meta/content-tab-item.meta";
 
 const AnkAPIContentTabItem = React.forwardRef(
   (contentTabItemMeta: ContentTabItemMeta, ref) => {
@@ -16,7 +16,7 @@ const AnkAPIContentTabItem = React.forwardRef(
 
     const { attributes, listeners, setNodeRef, transform, transition } =
       useSortable({
-        id: contentTabItemMeta.Data?.Id ? contentTabItemMeta.Data?.Id : -1,
+        id: contentTabItemMeta?.Data?.Id ? contentTabItemMeta?.Data?.Id : -1,
         animateLayoutChanges: () => false,
       });
 
@@ -33,7 +33,7 @@ const AnkAPIContentTabItem = React.forwardRef(
 
     function OnCloseClick(e: any) {
       e.stopPropagation();
-      if (contentTabItemMeta.CloseAction && contentTabItemMeta.Data?.Id)
+      if (contentTabItemMeta?.CloseAction && contentTabItemMeta?.Data?.Id)
         contentTabItemMeta.CloseAction(contentTabItemMeta.Data.Id);
     }
 

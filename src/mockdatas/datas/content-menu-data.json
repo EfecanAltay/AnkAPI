@@ -7,21 +7,21 @@
             {
                 "Name": "TEST 00",
                 "MenuKey": "TEST00",
-                "MenuType": 1
+                "MenuType": 1,
+                "ContentData":{
+                    "ContentPageHeader":
+                    {
+                        "Name": "Test 0"
+                    },
+                    "APITemplate":
+                    {
+                        "APIType" : "0",
+                        "SendingURL" : "https://google.com",
+                        "Header" : []
+                    }
+                }
             }
-        ],
-        "ContentData":{
-            "ContentPageHeader":
-            {
-                "Name": "Test 0"
-            },
-            "APITemplate":
-            {
-                "APIType" : "0",
-                "URL" : "https://google.com",
-                "Header" : []
-            }
-        }
+        ]
     },
     {
         "Name": "TEST 1",

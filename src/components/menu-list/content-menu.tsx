@@ -13,7 +13,10 @@ import {
 } from "@mui/material";
 import { ContentMenuListMeta } from "@/common/meta/content-menu-list.meta";
 import "./menu-list.css";
-import { ContentMenuItem, ContentMenuItemType } from "@/common/data/content-menu/content-menu.data";
+import {
+  ContentMenuItem,
+  ContentMenuItemType,
+} from "@/common/data/content-menu/content-menu.data";
 import {
   DndProvider,
   DropOptions,
@@ -67,6 +70,7 @@ export class ContentMenuProvider {
           Selectable: element.MenuType === ContentMenuItemType.Content,
           haveChildren:
             element.Children && element.Children.length > 0 ? true : false,
+          ContentData : element.ContentData
         } as ContentMenuItem,
       } as NodeModel<ContentMenuItem>;
 
@@ -108,11 +112,7 @@ export class ContentMenuProvider {
 
 export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
   const theme = useTheme();
-  const [selecteMenuKey, setSelecteMenuKey] = useState("");
-  const [draggedMenuName, setDraggedMenuName] = useState<
-    ContentMenuItem | undefined
-  >(undefined);
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
 
   const menu = ContentMenuProvider.GetContentMenuConvert(
     contentMenuList.ContentMenuList
@@ -125,58 +125,59 @@ export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
     setTreeData(newTreeData);
   };
 
-  const canDrop = (treeData: NodeModel<ContentMenuItem>[],options: DropOptions<ContentMenuItem>): boolean | void =>  {
-    
-    if(options.dropTarget && options.dragSourceId !== options.dropTargetId)
-    {
-      if(options.dropTarget.parent !== 0 && !dropValidation(options.dragSourceId,options.dropTarget,treeData))
-        return false; 
-      
+  const canDrop = (
+    treeData: NodeModel<ContentMenuItem>[],
+    options: DropOptions<ContentMenuItem>
+  ): boolean | void => {
+    if (options.dropTarget && options.dragSourceId !== options.dropTargetId) {
+      if (
+        options.dropTarget.parent !== 0 &&
+        !dropValidation(options.dragSourceId, options.dropTarget, treeData)
+      )
+        return false;
+
       return options.dropTarget.droppable;
-    }
-    else return false;
+    } else return false;
   };
 
-  function dropValidation(dragId : any, options: NodeModel<ContentMenuItem>, treeData: NodeModel<ContentMenuItem>[]){
-    if(options.parent !== 0)
-    {
-      if(options.parent === dragId)
-        return false;
-      const _parent = treeData.find(i=> i.id === options.parent);
-      if(_parent)
-        return dropValidation(dragId, _parent ,treeData);
-      else 
-        return false;
+  function dropValidation(
+    dragId: any,
+    options: NodeModel<ContentMenuItem>,
+    treeData: NodeModel<ContentMenuItem>[]
+  ) {
+    if (options.parent !== 0) {
+      if (options.parent === dragId) return false;
+      const _parent = treeData.find((i) => i.id === options.parent);
+      if (_parent) return dropValidation(dragId, _parent, treeData);
+      else return false;
     }
     return true;
-  }  
+  }
 
   function onSelectedMenuItem(id: string | number) {
-    for (let i = 0; i < treeData.length ; i++) {
+    for (let i = 0; i < treeData.length; i++) {
       let data = treeData[i];
-      if (data.id === id && data.data){
+      if (data.id === id && data.data) {
         data.data.IsSelected = true;
-        treeData[i] = data ;
+        treeData[i] = data;
         setTreeData(treeData);
         forceUpdate();
-      }
-      else if (data.data){
+      } else if (data.data) {
         data.data.IsSelected = false;
       }
     }
   }
 
   function onShowedMenu(id: string | number) {
-    for (let i = 0; i < treeData.length ; i++) {
+    for (let i = 0; i < treeData.length; i++) {
       let data = treeData[i];
-      if (data.id === id && data.data){
+      if (data.id === id && data.data) {
         data.data.IsSelected = true;
-        treeData[i] = data ;
+        treeData[i] = data;
         setTreeData(treeData);
         forceUpdate();
         contentMenuList.ShowContentAction?.(data.data);
-      }
-      else if (data.data){
+      } else if (data.data) {
         data.data.IsSelected = false;
       }
     }
@@ -258,17 +259,4 @@ export default function ContentMenu(contentMenuList: ContentMenuListMeta) {
       </ThemeProvider>
     </Box>
   );
-
-  function handleDragStart(event: any) {
-    setDraggedMenuName(event.active?.data?.current?.content);
-  }
-
-  function handleDragEnd(event: any) {
-    setDraggedMenuName(undefined);
-    const { active, over } = event;
-
-    if (over && over.data.current.accepts.includes(active.data.current.type)) {
-      console.log(over);
-    }
-  }
 }

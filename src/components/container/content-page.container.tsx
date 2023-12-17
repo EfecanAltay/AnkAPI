@@ -8,9 +8,10 @@ import { ContentPageContainerMeta } from "@/common/meta/content-container.meta";
 import AnkAPIContentTab from "../content-tab/content-tab";
 import { ContentTabItem } from "@/common/meta/content-tab-meta";
 import ContentMenu from "../menu-list/content-menu";
-import { useRef } from "react";
+import { useReducer, useRef } from "react";
 import { IContentTab } from "../content-tab/content-tab-interface";
 import { ContentMenuItem } from "@/common/data/content-menu/content-menu.data";
+import { IContentPage } from "@/common/content-page.interface";
 
 function getContentWidth(window: Window, theme: Theme) {
   if (typeof window !== "undefined")
@@ -25,6 +26,7 @@ function getContentHeight(window: Window, theme: Theme) {
 
 export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
   const theme = useTheme();
+  const [, forceUpdate] = useReducer(x => x + 1, 0);
   const [contentSize, setContentSize] = React.useState([0, 0]);
   const [sideBarShowing, setSideBarShowing] = React.useState(false);
   const [showLoading, setShowLoading] = React.useState(false);
@@ -32,6 +34,7 @@ export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
   const [currentData, setCurrentData] = React.useState<any>();
   
   const contentTabRef = useRef<IContentTab| undefined>();
+  const pageRef = useRef<IContentPage| undefined>();
 
   let menuList = cpcm.ContentPageContainerInfo?.ContentMenuList ? cpcm.ContentPageContainerInfo?.ContentMenuList : [];
   
@@ -60,9 +63,15 @@ export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
   }, [theme, sideBarShowing]);
 
   function ShowContentAction(item:ContentMenuItem): void {
-    contentTabRef.current?.ShowOnContentMenuItem(item);
-    setCurrentData(item.ContentData);
-    alert(`showing Data :${item.ContentData}`);
+    if(item.ContentData){
+      contentTabRef.current?.ShowOnContentMenuItem(item);
+      setCurrentData(item.ContentData);
+      pageRef.current?.Show();
+      forceUpdate();
+    }
+    else{
+      console.error("Empty content data !");
+    }
     setOpenedPageList(openedPageList);
   }
 
@@ -80,6 +89,7 @@ export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
   if(cpcm?.children)
     childElement = React.cloneElement(cpcm.children, {
         data : currentData,
+        ref : pageRef
     });
 
   return (
@@ -95,7 +105,7 @@ export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
         {contentMenu}
         {contentTab}
         <div className="content">
-          { childElement}
+          {childElement}
         </div>  
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
