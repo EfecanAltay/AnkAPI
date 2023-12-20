@@ -41,19 +41,55 @@
                     {
                         "Name": "TEST 200",
                         "MenuKey": "TEST200",
-                        "MenuType": 1
+                        "MenuType": 1,
+                        "ContentData":{
+                            "ContentPageHeader":
+                            {
+                                "Name": "Test 0"
+                            },
+                            "APITemplate":
+                            {
+                                "APIType" : "0",
+                                "SendingURL" : "https://test.com",
+                                "Header" : []
+                            }
+                        }
                     },
                     {
                         "Name": "TEST 201",
                         "MenuKey": "TEST201",
-                        "MenuType": 1
+                        "MenuType": 1,
+                        "ContentData":{
+                            "ContentPageHeader":
+                            {
+                                "Name": "Test 0"
+                            },
+                            "APITemplate":
+                            {
+                                "APIType" : "0",
+                                "SendingURL" : "https://test2.com",
+                                "Header" : []
+                            }
+                        }
                     }
                 ]
             },
             {
                 "Name": "TEST 21",
                 "MenuKey": "TEST21",
-                "MenuType": 1
+                "MenuType": 1,
+                "ContentData":{
+                    "ContentPageHeader":
+                    {
+                        "Name": "Test 21"
+                    },
+                    "APITemplate":
+                    {
+                        "APIType" : "1",
+                        "SendingURL" : "https://test2.com",
+                        "Header" : []
+                    }
+                }
             }
         ]
     }

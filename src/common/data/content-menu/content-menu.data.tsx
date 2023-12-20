@@ -9,6 +9,7 @@ export class ContentMenuItem {
     public Children : ContentMenuItem[] = [];
     public haveChildren : boolean = false; 
     public ContentData : ContentData = new ContentData();
+    public Path : string = "/";
 
     public Selectable: boolean = false;
     public IsSelected: boolean = false;

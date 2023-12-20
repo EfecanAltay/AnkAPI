@@ -53,11 +53,22 @@ export class ContentMenuProvider {
   public static GetContentMenuConvert(
     menuList: ContentMenuItem[],
     parentId: number | string = 0,
+    parentpath: string | undefined = undefined,
     currentId: number = 1
   ) {
     let resultList: NodeModel<ContentMenuItem>[] = [];
     let itemIdCounter = currentId;
     menuList.forEach((element, index) => {
+
+      if(parentId === 0)
+      {
+        element.Path = element.Name;
+      }
+      else
+      {
+        element.Path = parentpath + "/" + element.Name;
+      }
+
       const parentItem = {
         id: itemIdCounter,
         parent: parentId,
@@ -70,7 +81,8 @@ export class ContentMenuProvider {
           Selectable: element.MenuType === ContentMenuItemType.Content,
           haveChildren:
             element.Children && element.Children.length > 0 ? true : false,
-          ContentData : element.ContentData
+          ContentData : element.ContentData,
+          Path : element.Path
         } as ContentMenuItem,
       } as NodeModel<ContentMenuItem>;
 
@@ -80,6 +92,7 @@ export class ContentMenuProvider {
         const childrens = this.GetContentMenuConvert(
           element.Children,
           parentItem.id,
+          element?.Path,
           itemIdCounter
         );
         resultList = resultList.concat(childrens);

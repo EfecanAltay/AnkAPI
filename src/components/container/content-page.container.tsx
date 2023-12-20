@@ -3,15 +3,18 @@
 import "../components.css";
 import "./content-page.container.css";
 import * as React from "react";
-import { Backdrop, Box, CircularProgress, Theme, useTheme } from "@mui/material";
+import { Backdrop, Box, Breadcrumbs, CircularProgress, Link, Paper, Theme, Typography, useTheme } from "@mui/material";
 import { ContentPageContainerMeta } from "@/common/meta/content-container.meta";
 import AnkAPIContentTab from "../content-tab/content-tab";
-import { ContentTabItem } from "@/common/meta/content-tab-meta";
+import { ContentTabItem } from "@/common/data/content-tab/content-tab-item.data";
 import ContentMenu from "../menu-list/content-menu";
 import { useReducer, useRef } from "react";
 import { IContentTab } from "../content-tab/content-tab-interface";
 import { ContentMenuItem } from "@/common/data/content-menu/content-menu.data";
 import { IContentPage } from "@/common/content-page.interface";
+
+import { ContentData } from "@/common/data/content.data";
+import BreadCrumbs from "../breadcrumbs/breadcrumbs.component";
 
 function getContentWidth(window: Window, theme: Theme) {
   if (typeof window !== "undefined")
@@ -31,7 +34,8 @@ export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
   const [sideBarShowing, setSideBarShowing] = React.useState(false);
   const [showLoading, setShowLoading] = React.useState(false);
   const [openedPageList, setOpenedPageList] = React.useState<ContentTabItem[]>([]);
-  const [currentData, setCurrentData] = React.useState<any>();
+  const [currentData, setCurrentData] = React.useState<ContentData>();
+  const [currentPath, setCurrentPath] = React.useState<string>("");
   
   const contentTabRef = useRef<IContentTab| undefined>();
   const pageRef = useRef<IContentPage| undefined>();
@@ -66,6 +70,7 @@ export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
     if(item.ContentData){
       contentTabRef.current?.ShowOnContentMenuItem(item);
       setCurrentData(item.ContentData);
+      setCurrentPath(item.Path);
       pageRef.current?.Show();
       forceUpdate();
     }
@@ -82,6 +87,11 @@ export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
   const contentTab = cpcm.ContentPageContainerInfo?.IsHaveContentTab === true ?
   <div className="content-tab">
     <AnkAPIContentTab ref={contentTabRef} contentTabList={openedPageList} />
+  </div>: null;
+
+  const contentBreadcrumbs = cpcm.ContentPageContainerInfo?.IsHaveContentTab === true ?
+  <div className="content-breadcrumbs">
+      <BreadCrumbs path={currentPath} />
   </div>: null;
 
   let childElement = <div>Empty</div>
@@ -104,6 +114,7 @@ export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
       <div className="container" style={{ minWidth:contentSize[0]}}>
         {contentMenu}
         {contentTab}
+        {contentBreadcrumbs}
         <div className="content">
           {childElement}
         </div>  
