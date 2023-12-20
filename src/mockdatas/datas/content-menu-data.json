@@ -11,7 +11,8 @@
                 "ContentData":{
                     "ContentPageHeader":
                     {
-                        "Name": "Test 0"
+                        "Name": "Test 0",
+                        "ContentPageType": 0
                     },
                     "APITemplate":
                     {
@@ -45,7 +46,8 @@
                         "ContentData":{
                             "ContentPageHeader":
                             {
-                                "Name": "Test 0"
+                                "Name": "Test 0",
+                                "ContentPageType": 0
                             },
                             "APITemplate":
                             {
@@ -62,7 +64,8 @@
                         "ContentData":{
                             "ContentPageHeader":
                             {
-                                "Name": "Test 0"
+                                "Name": "Test 0",
+                                "ContentPageType": 0
                             },
                             "APITemplate":
                             {
@@ -81,7 +84,8 @@
                 "ContentData":{
                     "ContentPageHeader":
                     {
-                        "Name": "Test 21"
+                        "Name": "Test 21",
+                        "ContentPageType": 1
                     },
                     "APITemplate":
                     {

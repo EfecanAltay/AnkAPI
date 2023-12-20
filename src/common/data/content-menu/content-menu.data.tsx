@@ -8,7 +8,7 @@ export class ContentMenuItem {
     public PageContent: any;
     public Children : ContentMenuItem[] = [];
     public haveChildren : boolean = false; 
-    public ContentData : ContentData = new ContentData();
+    public ContentData : any = new ContentData();
     public Path : string = "/";
 
     public Selectable: boolean = false;

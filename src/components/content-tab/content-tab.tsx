@@ -1,9 +1,15 @@
 import * as React from "react";
-import { Box, IconButton, ThemeProvider, createTheme, useTheme } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  ThemeProvider,
+  createTheme,
+  useTheme,
+} from "@mui/material";
 import "./content-tab.css";
 import AnkAPIContentTabItem from "./content-tab-item";
 import { DndContext, DragOverlay, UniqueIdentifier } from "@dnd-kit/core";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import {
   AnimateLayoutChanges,
   arrayMove,
@@ -16,105 +22,103 @@ import { ContentMenuItem } from "@/common/data/content-menu/content-menu.data";
 import { ContentTabItem } from "@/common/data/content-tab/content-tab-item.data";
 import { ContentTabMeta } from "@/common/meta/content-tab-meta";
 
-const ContentTab = forwardRef<IContentTab | undefined,ContentTabMeta>((props,ref) => AnkAPIContentTab(props,ref));
-ContentTab.displayName = 'ContantTab';
+const ContentTab = forwardRef<IContentTab | undefined, ContentTabMeta>(
+  (props, ref) => AnkAPIContentTab(props, ref)
+);
+ContentTab.displayName = "ContantTab";
 export default ContentTab;
 
-function AnkAPIContentTab(contentTabMeta: ContentTabMeta, ref: React.ForwardedRef<IContentTab | undefined>) {
+function AnkAPIContentTab(
+  contentTabMeta: ContentTabMeta,
+  ref: React.ForwardedRef<IContentTab | undefined>
+) {
   const theme = useTheme();
   const [selectedContentKey, setSelectedContentKey] = useState("");
-  const [, forceUpdate] = useReducer(x => x + 1, 0);
-  const [items, setItems] = useState<ContentTabItem[]>(prepareTabList(contentTabMeta.contentTabList));
+  const [, forceUpdate] = useReducer((x) => x + 1, 0);
+  const [items, setItems] = useState<ContentTabItem[]>(
+    prepareTabList(contentTabMeta.contentTabList)
+  );
 
-  useImperativeHandle(ref, () => (
-    {
-      ShowOnContentMenuItem(item) {
-        const f_contentTab = findContentMenu(item.MenuKey);
-        if(f_contentTab)
-        {
-          selectContentPage(f_contentTab);
-          forceUpdate();
-        }
-        else
-        {
-          addNewTab(item);
-        } 
+  useImperativeHandle(ref, () => ({
+    ShowOnContentMenuItem(item) {
+      const f_contentTab = findContentMenu(item.MenuKey);
+      if (f_contentTab) {
+        selectContentPage(f_contentTab,true);
+        forceUpdate();
+      } else {
+        addNewTab(item);
       }
-    }
-  ));
-  
+    },
+  }));
+
   //** Opened Content Pages **/
-  
-  function findContentMenu(ContentKey : string) {
-    return items.find(x=> x.ContentKey === ContentKey );
+
+  function findContentMenu(ContentKey: string) {
+    return items.find((x) => x.ContentKey === ContentKey);
   }
-  
-  function prepareTabList(items : ContentTabItem[] | undefined) {
-    if(items && items.length > 0){
+
+  function prepareTabList(items: ContentTabItem[] | undefined) {
+    if (items && items.length > 0) {
       items.forEach((tabItem, index) => {
         tabItem.SelectCallbackAction = selectContentPage;
         tabItem.Id = index + 1;
       });
       return items;
     }
-    return [];   
+    return [];
   }
 
-  function addNewTab(menuItem?: ContentMenuItem){
+  function addNewTab(menuItem?: ContentMenuItem) {
     let tabItem = new ContentTabItem();
     tabItem.SelectCallbackAction = selectContentPage;
     tabItem.IsSelected = true;
 
-    if(menuItem)
-    {
+    if (menuItem) {
       tabItem.ContentKey = menuItem.MenuKey;
       tabItem.ContentName = menuItem.Name;
       tabItem.IsNotSaved = false;
-    }
-    else
-    {
+    } else {
       /* Creating New Tab */
-      if(items.length > 0 )
-      {
+      if (items.length > 0) {
         let counter = 0;
-        do
-        {
-          let f_item = items.find(x=> x.ContentName === `New Page${counter > 0 ? ' ' + counter : ''}`);
-          if(f_item)
-          {          
+        do {
+          let f_item = items.find(
+            (x) =>
+              x.ContentName === `New Page${counter > 0 ? " " + counter : ""}`
+          );
+          if (f_item) {
             counter = counter + 1;
-          }
-          else
-            break;
-        }while(true);
-        tabItem.ContentName = `New Page${counter > 0 ? ' ' + counter : ''}`
-      }
-      else
-        tabItem.ContentName = "New Page"
-     
-      tabItem.ContentKey = tabItem.ContentName.replace(/\s/g, '').trim().toUpperCase();
+          } else break;
+        } while (true);
+        tabItem.ContentName = `New Page${counter > 0 ? " " + counter : ""}`;
+      } else tabItem.ContentName = "New Page";
+
+      tabItem.ContentKey = tabItem.ContentName.replace(/\s/g, "")
+        .trim()
+        .toUpperCase();
     }
-    
+
     items.push(tabItem);
 
     setItems(prepareTabList(items));
-    selectContentPage(tabItem);
+    selectContentPage(tabItem, false, !tabItem.IsNotSaved);
     forceUpdate();
   }
 
-  function RemoveTab(id: UniqueIdentifier){
-    const r_item = items.find(x => x.Id === id && x.IsSelected);
-    const n_items = items.filter(i=> i.Id !== id);
+  function RemoveTab(id: UniqueIdentifier) {
+    const r_item = items.find((x) => x.Id === id && x.IsSelected);
+    const n_items = items.filter((i) => i.Id !== id);
     setItems(n_items);
-    if(r_item && n_items.length > 0)
-    {
-      n_items[n_items.length-1].IsSelected = true;
+    if (r_item && n_items.length > 0) {
+      const selectedItem = n_items[n_items.length - 1];
+      selectedItem.IsSelected = true;
+      contentTabMeta.onSelectedChanged(selectedItem,false);
     }
     //forceUpdate();
   }
 
   //**************************/
-  
+
   const [activeId, setActiveId] = React.useState<UniqueIdentifier | null>(null);
 
   const getItemIndexList = (contentTablist?: ContentTabItem[]) =>
@@ -130,11 +134,17 @@ function AnkAPIContentTab(contentTabMeta: ContentTabMeta, ref: React.ForwardedRe
   const animateLayoutChanges: AnimateLayoutChanges = (args) =>
     defaultAnimateLayoutChanges({ ...args, wasDragging: true });
 
-  function selectContentPage(contentTabItem: ContentTabItem) {
+  function selectContentPage(
+    contentTabItem: ContentTabItem,
+    fromMenu: boolean = false,
+    isNewContent : boolean = false
+  ) {
     items.forEach((contentPage) => {
-      contentPage.IsSelected = contentPage.ContentKey === contentTabItem.ContentKey;
+      contentPage.IsSelected =
+        contentPage.ContentKey === contentTabItem.ContentKey;
       //contentPage.Referance?.current?.UpdateAction();
     });
+    contentTabMeta.onSelectedChanged(contentTabItem,fromMenu);
   }
 
   function reorderContentTabs(
@@ -178,7 +188,7 @@ function AnkAPIContentTab(contentTabMeta: ContentTabMeta, ref: React.ForwardedRe
       >
         <div className="pageBarList">
           <DndContext
-            id = {React.useId()}
+            id={React.useId()}
             onDragStart={({ active }) => {
               if (!active) {
                 return;
@@ -203,13 +213,18 @@ function AnkAPIContentTab(contentTabMeta: ContentTabMeta, ref: React.ForwardedRe
                   ref={pageBar.Referance}
                   key={index + 1}
                   Data={pageBar}
-                  CloseAction={(id:UniqueIdentifier)=>RemoveTab(id)}
+                  CloseAction={(id: UniqueIdentifier) => RemoveTab(id)}
                 />
               ))}
             </SortableContext>
             <DragOverlay dropAnimation={null}></DragOverlay>
           </DndContext>
-          <IconButton onClick={()=>{ addNewTab()}} aria-label="fingerprint">
+          <IconButton
+            onClick={() => {
+              addNewTab();
+            }}
+            aria-label="fingerprint"
+          >
             <AddCircleOutlineIcon />
           </IconButton>
         </div>

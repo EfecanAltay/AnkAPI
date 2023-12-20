@@ -43,7 +43,7 @@
 
 .content {
   background-color: var(--mui-primary-dark);
-  padding: 30px;
+  padding: 20px;
   height: 100%;
   float: left;
   width: calc(100% - 220px);
