@@ -4,7 +4,7 @@ import { useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
 import CssBaseline from "@mui/material/CssBaseline";
 import AnkAPIAppBar from "./app-bar/ankapi-appbar";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { ISnackbar } from "@/common/snackbar.interface";
 import AnkAPISideBar from "./app-bar/ankapi-sidebar";
 import ContentPageContainer from "./container/content-page.container";
@@ -13,6 +13,10 @@ import { SidebarItemData } from "@/common/data/sidebar-menu/sidebar-item.data";
 import dynamic from "next/dynamic";
 import { DashboardMeta } from "@/common/meta/dashboard-meta";
 import { MockDataProvider } from "@/mockdatas/mockdata-provider";
+import { AuthonticationAPI } from "@/api_services/auth.service";
+import { start } from "repl";
+import { StartTwoTone } from "@mui/icons-material";
+import { get } from "https";
 
 const UICreateAPIPage = dynamic(() => import("./contents/create-api.page"), {
   loading: () => <p>Loading...</p>,
@@ -25,6 +29,10 @@ export default function Dashboard(metaData : DashboardMeta) {
   const [selectedMenuKey, setSelectedMenuKey] = React.useState("CAR");
   const [menuList, setMenuList] = React.useState(MockDataProvider.GetMainMenuData())//metaData.MainMenuList
   const popupRef = useRef<ISnackbar>(null);
+
+  useEffect(() => {
+    AuthonticationAPI.Get();
+  }, []);
 
   function OnClickMenuButton(): any {
     setOpen(true);

@@ -105,9 +105,11 @@ export default function ContentPageContainer(cpcm: ContentPageContainerMeta) {
   }, [theme, sideBarShowing]);
 
   function ShowContentAction(item: ContentMenuItem): void {
-    if (item.ContentData) {
+    // TODO: API GET ContentData 
+    
+    if (item.ContentDataId) {
       contentTabRef.current?.ShowOnContentMenuItem(item);
-      setCurrentData(item.ContentData);
+      setCurrentData(new ContentData());
       setCurrentPath(item.Path);
       pageRef.current?.Show();
       forceUpdate();

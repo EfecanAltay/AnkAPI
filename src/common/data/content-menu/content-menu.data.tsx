@@ -1,5 +1,3 @@
-import { ContentData } from "../content.data";
-
 export class ContentMenuItem {
     public MenuKey: string = "";
     public Name: string = "";
@@ -8,7 +6,7 @@ export class ContentMenuItem {
     public PageContent: any;
     public Children : ContentMenuItem[] = [];
     public haveChildren : boolean = false; 
-    public ContentData : any = new ContentData();
+    public ContentDataId : string = "";
     public Path : string = "/";
 
     public Selectable: boolean = false;
